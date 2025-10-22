@@ -2154,7 +2154,9 @@ namespace Photon.Pun
                     return true;
                 }
 
-                EventData evData = new EventData { Code = eventCode, Parameters = new Dictionary<byte, object> { {ParameterCode.Data, eventContent} } };
+                EventData evData = new EventData();
+                evData.Code = eventCode;
+                //evData.Parameters = new Dictionary<byte, object> { { (byte)ParameterCode.Data, eventContent } };
                 NetworkingClient.OnEvent(evData);
                 return true;
             }

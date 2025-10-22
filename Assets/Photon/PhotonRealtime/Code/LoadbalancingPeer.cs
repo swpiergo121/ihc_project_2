@@ -38,6 +38,7 @@ namespace Photon.Realtime
     /// Internally used by PUN.
     /// The LoadBalancingPeer does not keep a state, instead this is done by a LoadBalancingClient.
     /// </remarks>
+    
     public class LoadBalancingPeer : PhotonPeer
     {
         protected internal static Type PingImplementation = null;
@@ -129,7 +130,7 @@ namespace Photon.Realtime
             Dictionary<byte, object> parameters = new Dictionary<byte, object>();
             parameters[(byte)ParameterCode.ApplicationId] = appId;
 
-            return this.SendOperation(OperationCode.GetRegions, parameters, new SendOptions() { Reliability = true, Encrypt = true });
+            return this.SendOperation(OperationCode.GetRegions, (Dictionary<byte, object>)parameters, new SendOptions() { Reliability = true, Encrypt = true });
         }
 
         /// <summary>
@@ -153,8 +154,7 @@ namespace Photon.Realtime
                 parameters[(byte)ParameterCode.LobbyType] = (byte)lobby.Type;
             }
 
-            return this.SendOperation(OperationCode.JoinLobby, parameters, SendOptions.SendReliable);
-        }
+return this.SendOperation(OperationCode.JoinLobby, (Dictionary<byte, object>)parameters, SendOptions.SendReliable);        }
 
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Photon.Realtime
                 this.Listener.DebugReturn(DebugLevel.INFO, "OpLeaveLobby()");
             }
 
-            return this.SendOperation(OperationCode.LeaveLobby, null, SendOptions.SendReliable);
+            return this.SendOperation(OperationCode.LeaveLobby, (Dictionary<byte, object>)null, SendOptions.SendReliable);
         }
 
 
