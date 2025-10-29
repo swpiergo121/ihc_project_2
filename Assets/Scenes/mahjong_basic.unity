@@ -12097,8 +12097,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1720606398}
   - component: {fileID: 1720606399}
-  - component: {fileID: 1720606401}
-  - component: {fileID: 1720606400}
   m_Layer: 0
   m_Name: ClientManager
   m_TagString: Untagged
@@ -12154,40 +12152,6 @@ MonoBehaviour:
   PointTransferManager: {fileID: 994144859}
   GameEndPanelManager: {fileID: 1779214765}
   LocalSettingManager: {fileID: 1658782499}
---- !u!114 &1720606400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1720606397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ffd295e334b4004bb5ce8b481be35e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1720606401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1720606397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 0
-  OwnershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 0}
-  viewIdField: 2
-  InstantiationId: 2
-  isRuntimeInstantiated: 0
 --- !u!1 &1721137886
 GameObject:
   m_ObjectHideFlags: 0
@@ -12233,6 +12197,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60f07a3f8de9f4b15b825cc4bd080715, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LocalGameSettings:
+    GameMode: 0
+    GamePlayers: 0
+    RoundCount: 0
+    MinimumFanConstraintType: 0
+    PointsToGameEnd: 0
+    GameEndsWhenAllLastTop: 0
+    InitialPoints: 0
+    FirstPlacePoints: 0
+    AllowHint: 0
+    InitialDoraCount: 0
+    AllowRichiWhenPointsLow: 0
+    AllowRichiWhenNotReady: 0
+    AllowDiscardSameAfterOpen: 0
+    RichiMortgagePoints: 0
+    ExtraRoundBonusPerPlayer: 0
+    NotReadyPunishPerPlayer: 0
+    FalseRichiPunishPerPlayer: 0
+    AllowMultipleRong: 0
+    Allow3RongDraw: 0
+    Allow4RichiDraw: 0
+    Allow4KongDraw: 0
+    Allow4WindDraw: 0
+    Allow9OrphanDraw: 0
+    BaseTurnTime: 5
+    BonusTurnTime: 20
+    AllowChows: 0
+    AllowPongs: 0
+    AllowBeiDora: 0
+    AllowBeiAsYaku: 0
+    AllowBeiDoraRongAsRobbKong: 0
+    AllowBeiDoraTsumoAsLingShang: 0
+    DiceMin: 2
+    DiceMax: 12
+    MountainReservedTiles: 14
+    MaxDora: 5
+    OpenDuanYao: 1
+    HasOneShot: 1
+    "\u8FDE\u98CE\u5BF9\u5B50\u989D\u5916\u52A0\u7B26": 1
+    AllowGswsRobConcealedKong: 1
+    SiAnKe: 1
+    GuoShi: 1
+    JiuLian: 1
+    LvYiSe: 0
+    redTiles:
+    - Suit: 0
+      Rank: 5
+      IsRed: 1
+    - Suit: 1
+      Rank: 5
+      IsRed: 1
+    - Suit: 2
+      Rank: 5
+      IsRed: 1
   lobbyScene:
     m_SceneAsset: {fileID: 102900000, guid: 4c2341c885655ee4ea1505538ea84d4f, type: 3}
     m_SceneName: PUN_Lobby
