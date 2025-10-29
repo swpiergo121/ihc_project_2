@@ -4,19 +4,62 @@ using Common.StateMachine.Interfaces;
 using GamePlay.Server.Controller.GameState;
 using GamePlay.Server.Model;
 using Mahjong.Model;
-using Photon.Pun;
-using PUNLobby;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utils;
+
+public interface IPlayer
+{
+    /// <summary>
+    /// The unique ID for this player (e.g., 0, 1, 2, or 3)
+    /// </summary>
+    int PlayerId { get; }
+
+    /// <summary>
+    /// The name to display in the UI
+    /// </summary>
+    string Nickname { get; }
+
+    /// <summary>
+    /// Is this player controlled by AI?
+    /// </summary>
+    bool IsBot { get; }
+}
+
+public class LocalHumanPlayer : IPlayer
+{
+    public int PlayerId { get; private set; }
+    public string Nickname { get; private set; }
+    public bool IsBot => false; // This is the key difference
+
+    public LocalHumanPlayer(int id, string name)
+    {
+        PlayerId = id;
+        Nickname = name;
+    }
+}
+
+public class BotPlayer : IPlayer
+{
+    public int PlayerId { get; private set; }
+    public string Nickname { get; private set; }
+    public bool IsBot => true; // This is the key difference
+
+    public BotPlayer(int id, string name)
+    {
+        PlayerId = id;
+        Nickname = name;
+    }
+}
 
 namespace GamePlay.Server.Controller
 {
     /// <summary>
     /// This class only takes effect on server
     /// </summary>
-    public class ServerBehaviour : MonoBehaviourPun
+    public class ServerBehaviour : MonoBehaviour
     {
+        public GameSetting LocalGameSettings; // Assign this in the Unity Inspector
         public SceneField lobbyScene;
         [HideInInspector] public GameSetting GameSettings;
         public IStateMachine StateMachine { get; private set; }
@@ -27,12 +70,6 @@ namespace GamePlay.Server.Controller
         private void OnEnable()
         {
             Debug.Log("[Server] ServerBehaviour.OnEnable() is called");
-            if (!PhotonNetwork.IsConnected)
-            {
-                SceneManager.LoadScene(lobbyScene);
-                return;
-            }
-            if (!PhotonNetwork.IsMasterClient) return;
             Instance = this;
             StateMachine = new StateMachine();
             ReadSetting();
@@ -41,8 +78,8 @@ namespace GamePlay.Server.Controller
 
         private void Start()
         {
-            if (!PhotonNetwork.IsMasterClient)
-                Destroy(gameObject);
+            // You can completely remove the Start() method, 
+            // as its only purpose was to destroy non-master-client instances.
         }
 
         private void Update()
@@ -52,10 +89,11 @@ namespace GamePlay.Server.Controller
 
         private void ReadSetting()
         {
-            var room = PhotonNetwork.CurrentRoom;
-            // var setting = (string)room.CustomProperties[SettingKeys.SETTING];
-            // GameSettings = JsonUtility.FromJson<GameSetting>(setting);
-            GameSettings = (GameSetting)room.CustomProperties[SettingKeys.SETTING];
+            GameSettings = LocalGameSettings;
+            if (GameSettings == null)
+            {
+                Debug.LogError("LocalGameSettings is not assigned in the Inspector!");
+            }
         }
 
         private void WaitForOthersLoading()
@@ -69,13 +107,32 @@ namespace GamePlay.Server.Controller
 
         public void GamePrepare()
         {
-            CurrentRoundStatus = new ServerRoundStatus(GameSettings, PhotonNetwork.PlayerList);
+            // You must create a new method to generate your local player + bot list
+            var localPlayerList = CreateLocalPlayerList();
+
+            // The ServerRoundStatus constructor will also need to be changed
+            // to accept your new local player list instead of Photon.Player[]
+            CurrentRoundStatus = new ServerRoundStatus(GameSettings, localPlayerList);
             mahjongSet = new MahjongSet(GameSettings, GameSettings.GetAllTiles());
             var prepareState = new GamePrepareState
             {
                 CurrentRoundStatus = CurrentRoundStatus,
             };
             StateMachine.ChangeState(prepareState);
+        }
+        private IPlayer[] CreateLocalPlayerList()
+        {
+            IPlayer[] players = new IPlayer[4];
+
+            // Player 0 is the human
+            players[0] = new LocalHumanPlayer(0, "Player 1");
+
+            // Players 1, 2, and 3 are bots
+            players[1] = new BotPlayer(1, "Bot 1");
+            players[2] = new BotPlayer(2, "Bot 2");
+            players[3] = new BotPlayer(3, "Bot 3");
+
+            return players;
         }
 
         public void GameAbort()

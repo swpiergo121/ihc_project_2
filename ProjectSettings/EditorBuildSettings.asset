@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/OVRCameraRigScene.unity
     guid: 64564749c7d3541478c822666293053e
+  - enabled: 1
+    path: Assets/Scenes/PUN_Mahjong.unity
+    guid: 8f4197c9f5fc5214f932eb76412a05ce
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: ececb65994ca7d5419890efd40d3e595, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 753a1e263f146b848a7a99f39f110eb2, type: 2}

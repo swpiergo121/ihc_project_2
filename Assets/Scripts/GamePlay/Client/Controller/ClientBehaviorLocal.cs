@@ -1,27 +1,24 @@
-﻿using System.Linq;
+using System.Linq;
 using Common.StateMachine;
 using Common.StateMachine.Interfaces;
 using GamePlay.Client.Controller.GameState;
 using GamePlay.Client.Model;
 using GamePlay.Server.Model;
 using Mahjong.Model;
-using Photon.Pun;
-using Photon.Realtime;
 using GamePlay.Server.Model.Events;
 using UnityEngine;
 
 namespace GamePlay.Client.Controller
 {
-    public class ClientBehaviour : MonoBehaviourPunCallbacks
+    public class ClientBehaviour : MonoBehaviour
     {
         public static ClientBehaviour Instance { get; private set; }
         private ClientRoundStatus CurrentRoundStatus;
         private ViewController controller;
         public IStateMachine StateMachine { get; private set; }
 
-        public override void OnEnable()
+        public void OnEnable()
         {
-            base.OnEnable();
             Debug.Log("ClientBehaviour.OnEnable() is called");
             Instance = this;
             StateMachine = new StateMachine();
@@ -29,17 +26,10 @@ namespace GamePlay.Client.Controller
 
         private void Start()
         {
-            if (!PhotonNetwork.IsMasterClient)
-            {
-                var player = PhotonNetwork.LocalPlayer;
-                PhotonNetwork.RaiseEvent(
-                    EventMessages.LoadCompleteEvent, player.ActorNumber,
-                    EventMessages.ToMaster, EventMessages.SendReliable);
-            }
             controller = ViewController.Instance;
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcGamePrepare(EventMessages.GamePrepareInfo info)
         {
             CurrentRoundStatus = new ClientRoundStatus(info.PlayerIndex, info.GameSetting);
@@ -52,7 +42,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(prepareState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcRoundStart(EventMessages.RoundStartInfo info)
         {
             var startState = new RoundStartState
@@ -70,7 +60,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(startState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcDrawTile(EventMessages.DrawTileInfo info)
         {
             var drawState = new PlayerDrawState
@@ -86,7 +76,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(drawState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcKong(EventMessages.KongInfo message)
         {
             var kongState = new PlayerKongState
@@ -101,7 +91,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(kongState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcBeiDora(EventMessages.BeiDoraInfo message)
         {
             var beiDoraState = new PlayerBeiDoraState
@@ -117,7 +107,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(beiDoraState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcDiscardOperation(EventMessages.DiscardOperationInfo info)
         {
             var discardOperationState = new PlayerDiscardOperationState
@@ -136,7 +126,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(discardOperationState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcTurnEnd(EventMessages.TurnEndInfo info)
         {
             var turnEndState = new PlayerTurnEndState
@@ -154,7 +144,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(turnEndState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcOperationPerform(EventMessages.OperationPerformInfo info)
         {
             var operationState = new PlayerOperationPerformState
@@ -171,7 +161,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(operationState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcTsumo(EventMessages.TsumoInfo info)
         {
             var tsumoState = new PlayerTsumoState
@@ -190,7 +180,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(tsumoState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcRong(EventMessages.RongInfo message)
         {
             var rongState = new PlayerRongState
@@ -209,7 +199,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(rongState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcRoundDraw(EventMessages.RoundDrawInfo info)
         {
             var roundDrawState = new RoundDrawState
@@ -221,7 +211,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(roundDrawState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcPointTransfer(EventMessages.PointTransferInfo message)
         {
             var transferState = new PointTransferState
@@ -234,7 +224,7 @@ namespace GamePlay.Client.Controller
             StateMachine.ChangeState(transferState);
         }
 
-        [PunRPC]
+        // [PunRPC]
         public void RpcGameEnd(EventMessages.GameEndInfo message) {
             var endState = new GameEndState
             {
@@ -494,6 +484,7 @@ namespace GamePlay.Client.Controller
             });
         }
 
+        /*
         public override void OnLeftRoom()
         {
             // todo
@@ -513,5 +504,6 @@ namespace GamePlay.Client.Controller
         {
             // todo
         }
+        */
     }
 }

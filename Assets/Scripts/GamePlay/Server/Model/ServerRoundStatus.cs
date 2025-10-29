@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Mahjong.Logic;
 using Mahjong.Model;
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 using Utils;
 
@@ -34,15 +32,13 @@ namespace GamePlay.Server.Model
         private bool[] discardZhenting;
         private bool[] richiZhenting;
         private int[] beiDoras;
-        private IList<int> playerActorNumbers;
-        private IDictionary<int, string> playerNames;
+        private IPlayer[] playerList;
 
-        public ServerRoundStatus(GameSetting gameSettings, IList<Player> players)
+        public ServerRoundStatus(GameSetting gameSettings, IPlayer[] players)
         {
             GameSettings = gameSettings;
             points = new int[TotalPlayers];
-            playerActorNumbers = players.Select(p => p.ActorNumber).ToList();
-            playerNames = players.ToDictionary(p => p.ActorNumber, p => p.NickName);
+            playerList = players;
         }
 
         public GameSetting GameSettings { get; }
@@ -58,14 +54,39 @@ namespace GamePlay.Server.Model
                 currentPlayerIndex = value;
             }
         }
-        public Player GetPlayer(int playerIndex)
+
+        // ### METHOD REPLACED ###
+        // The old GetPlayer(int) is gone. This is its replacement.
+        /// <summary>
+        /// Gets the complete player object (IPlayer) for the given seat index.
+        /// </summary>
+        public IPlayer GetPlayer(int playerIndex)
         {
-            var room = PhotonNetwork.CurrentRoom;
-            if (room == null) throw new ArgumentException("This should not happen");
-            int actorNumber = playerActorNumbers[playerIndex];
-            return room.Players[actorNumber];
+            if (playerList == null)
+            {
+                Debug.LogError("playerList is null. Was ServerRoundStatus initialized?");
+                return null;
+            }
+            CheckRange(playerIndex); // Uses the existing range check
+            return playerList[playerIndex];
         }
-        public IList<int> PlayerActorNumbers => playerActorNumbers;
+
+        // ### NEW HELPER METHOD ###
+        /// <summary>
+        /// A quick check to see if a player is a bot.
+        /// </summary>
+        public bool IsBot(int playerIndex)
+        {
+            var player = GetPlayer(playerIndex);
+            return player != null && player.IsBot;
+        }
+
+        public string GetPlayerName(int index)
+        {
+            CheckRange(index);
+            // Gets nickname directly from the IPlayer object in our list
+            return playerList[index].Nickname;
+        }
         public int OyaPlayerIndex => oya;
         public int Field => field;
         public int Dice => dice;
@@ -108,14 +129,10 @@ namespace GamePlay.Server.Model
         }
         public bool FirstTurn => firstTurn;
         public int TotalPlayers => GameSettings.MaxPlayer;
-        public string[] PlayerNames => playerActorNumbers.Select(id => playerNames[id]).ToArray();
-        public int KongClaimed => kongClaimed;
+        public string[] PlayerNames => playerList.Select(p => p.Nickname).ToArray(); public int KongClaimed => kongClaimed;
         public int MaxBonusTurnTime => bonusTurnTime.Max();
 
-        public string GetPlayerName(int index)
-        {
-            return playerNames[playerActorNumbers[index]];
-        }
+
 
         public void ClaimKong()
         {
@@ -124,9 +141,10 @@ namespace GamePlay.Server.Model
 
         public void ShufflePlayers()
         {
-            playerActorNumbers.Shuffle();
+            // Assumes Utils.Shuffle is an extension method for IList<T>
+            // Since playerList (IPlayer[]) implements IList<IPlayer>, this will work.
+            playerList.Shuffle();
         }
-
         public int GetBonusTurnTime(int index)
         {
             CheckRange(index);

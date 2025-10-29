@@ -1,18 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
-using ExitGames.Client.Photon;
 using GamePlay.Client.Controller;
 using GamePlay.Server.Model;
 using GamePlay.Server.Model.Events;
 using Mahjong.Logic;
 using Mahjong.Model;
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 
 namespace GamePlay.Server.Controller.GameState
 {
-    public class PlayerBeiDoraState : ServerState, IOnEventCallback
+    public class PlayerBeiDoraState : ServerState
     {
         public int CurrentPlayerIndex;
         public MahjongSet MahjongSet;
@@ -22,18 +19,34 @@ namespace GamePlay.Server.Controller.GameState
         private float serverTimeOut;
         public override void OnServerStateEnter()
         {
-            PhotonNetwork.AddCallbackTarget(this);
             // update hand tiles and bei doras
-            UpdateRoundStatus();
-            // send messages
-            for (int i = 0; i < players.Count; i++)
+            int playerCount = CurrentRoundStatus.GameSettings.MaxPlayer;
+            responds = new bool[playerCount];
+            outTurnOperations = new OutTurnOperation[playerCount];
+
+            // ### NEW BOT LOGIC ###
+            for (int i = 0; i < playerCount; i++)
             {
-                var info = GetInfo(i);
-                var player = CurrentRoundStatus.GetPlayer(i);
-                ClientBehaviour.Instance.photonView.RPC("RpcBeiDora", player, info);
+                if (CurrentRoundStatus.IsBot(i))
+                {
+                    // This is a bot. Its logic is to always skip.
+                    outTurnOperations[i] = new OutTurnOperation { Type = OutTurnOperationType.Skip };
+                    responds[i] = true; // Mark as responded immediately
+                }
+                else
+                {
+                    // This is the human player.
+                    // Get their info
+                    var info = GetInfo(i);
+
+                    // Call the client-side method directly (instead of RPC)
+                    // Note: ClientBehaviour.Instance.RpcBeiDora must be made public
+                    ClientBehaviour.Instance.RpcBeiDora(info);
+
+                    // We will wait for their response, so responds[i] remains false
+                }
             }
-            responds = new bool[players.Count];
-            outTurnOperations = new OutTurnOperation[players.Count];
+
             firstTime = Time.time;
             serverTimeOut = CurrentRoundStatus.MaxBonusTurnTime + gameSettings.BaseTurnTime + ServerConstants.ServerTimeBuffer;
         }
@@ -125,7 +138,6 @@ namespace GamePlay.Server.Controller.GameState
 
         public override void OnServerStateExit()
         {
-            PhotonNetwork.RemoveCallbackTarget(this);
         }
 
         public override void OnStateUpdate()
@@ -172,26 +184,15 @@ namespace GamePlay.Server.Controller.GameState
             Debug.LogError($"[Server] Logically cannot reach here, operations are {string.Join("|", outTurnOperations)}");
         }
 
-        private void OnOutTurnOperationEvent(EventMessages.OutTurnOperationInfo info)
+        public void OnClientOperationResponse(EventMessages.OutTurnOperationInfo info)
         {
             var index = info.PlayerIndex;
-            if (responds[index]) return;
+            if (responds[index]) return; // Already responded (shouldn't happen for human)
             responds[index] = true;
             outTurnOperations[index] = info.Operation;
             CurrentRoundStatus.SetBonusTurnTime(index, info.BonusTurnTime);
         }
 
-        public void OnEvent(EventData photonEvent)
-        {
-            var code = photonEvent.Code;
-            var info = photonEvent.CustomData;
-            Debug.Log($"{GetType().Name} receives event code: {code} with content {info}");
-            switch (code)
-            {
-                case EventMessages.OutTurnOperationEvent:
-                    OnOutTurnOperationEvent((EventMessages.OutTurnOperationInfo)info);
-                    break;
-            }
-        }
+
     }
 }
