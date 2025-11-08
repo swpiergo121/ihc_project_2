@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/OVRCameraRigScene.unity
     guid: 64564749c7d3541478c822666293053e
+  - enabled: 1
+    path: Assets/Scenes/motions.unity
+    guid: 3ea0308f6ba71ed4da219da3c8a50ec4
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: ececb65994ca7d5419890efd40d3e595, type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 6d7b662eb2357dd4ab941656c007ebf9, type: 2}
