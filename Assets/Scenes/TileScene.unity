@@ -513,9 +513,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -780,9 +780,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -855,9 +855,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -930,9 +930,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -1873,6 +1873,7 @@ MonoBehaviour:
   _addNewPointsToFront: 0
   _forwardElement: {fileID: 0}
   _glowObject: {fileID: 2037375746}
+  _discardPile: {fileID: 0}
   _oneGrabTransformer: {fileID: 0}
   _twoGrabTransformer: {fileID: 0}
   _targetTransform: {fileID: 0}
@@ -1950,7 +1951,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -2366,7 +2367,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -2757,7 +2758,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -3732,9 +3733,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -3806,7 +3807,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -4147,7 +4148,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -4222,7 +4223,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -5011,7 +5012,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -5866,9 +5867,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -6112,9 +6113,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -6454,9 +6455,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -7080,7 +7081,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -7233,7 +7234,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &879705252
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7373,7 +7374,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -7448,9 +7449,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -7977,7 +7978,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -8355,7 +8356,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -8430,7 +8431,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -8505,9 +8506,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -8995,7 +8996,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -9143,7 +9144,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -9314,9 +9315,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -9464,9 +9465,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -9539,7 +9540,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -9710,7 +9711,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -9860,9 +9861,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -11268,7 +11269,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -11294,67 +11295,6 @@ MonoBehaviour:
   _handAligment: 1
   _handGrabPoses:
   - {fileID: 1386722429}
---- !u!1001 &1427155063
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2808569462268358006, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_Name
-      value: Mug
-      objectReference: {fileID: 0}
-    - target: {fileID: 2808569462268358006, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3292654313950918604, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.398
-      objectReference: {fileID: 0}
-    - target: {fileID: 3292654313950918604, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.009
-      objectReference: {fileID: 0}
-    - target: {fileID: 3292654313950918604, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.107999995
-      objectReference: {fileID: 0}
-    - target: {fileID: 3292654313950918604, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3292654313950918604, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3292654313950918604, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3292654313950918604, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3292654313950918604, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3292654313950918604, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3292654313950918604, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 25c090698b1b94e4d9a8f6d5494bdf31, type: 3}
 --- !u!1 &1434573918
 GameObject:
   m_ObjectHideFlags: 0
@@ -11451,6 +11391,88 @@ MonoBehaviour:
   _ghostProvider: {fileID: 0}
   _handGhostProvider: {fileID: 0}
   _ovrOffsetMode: 0
+--- !u!1001 &1437799984
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 421498093602009262, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8ad4c106f1d73944fb545ad46f4a0adf, type: 2}
+    - target: {fileID: 2630271827884840384, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.1457
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630271827884840384, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.6677
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630271827884840384, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.1149
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630271827884840384, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.709186
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630271827884840384, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630271827884840384, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.70502144
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630271827884840384, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630271827884840384, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630271827884840384, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 89.663
+      objectReference: {fileID: 0}
+    - target: {fileID: 2630271827884840384, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934661742275275994, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8ad4c106f1d73944fb545ad46f4a0adf, type: 2}
+    - target: {fileID: 3143830454726066169, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_Name
+      value: BorderDiscard
+      objectReference: {fileID: 0}
+    - target: {fileID: 3143830454726066169, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4715027054233991255, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8ad4c106f1d73944fb545ad46f4a0adf, type: 2}
+    - target: {fileID: 8240304627632236765, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8ad4c106f1d73944fb545ad46f4a0adf, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+--- !u!1 &1437799985 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3143830454726066169, guid: de2f6947da88bb24ab9e38f7c4bfa298, type: 3}
+  m_PrefabInstance: {fileID: 1437799984}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1473474191
 GameObject:
   m_ObjectHideFlags: 0
@@ -11500,7 +11522,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -11637,6 +11659,7 @@ MonoBehaviour:
   _addNewPointsToFront: 0
   _forwardElement: {fileID: 0}
   _glowObject: {fileID: 879705251}
+  _discardPile: {fileID: 1437799985}
   _oneGrabTransformer: {fileID: 0}
   _twoGrabTransformer: {fileID: 0}
   _targetTransform: {fileID: 0}
@@ -11766,9 +11789,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -11937,7 +11960,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -12188,9 +12211,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -12263,9 +12286,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -13583,7 +13606,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -13925,7 +13948,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -14295,9 +14318,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -14369,7 +14392,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -15511,9 +15534,9 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
-  _physicsGrabbable: {fileID: 0}
+  _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0.8
@@ -15883,7 +15906,7 @@ MonoBehaviour:
   _maxInteractors: -1
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
-  _pointableElement: {fileID: 0}
+  _pointableElement: {fileID: 212038998}
   _rigidbody: {fileID: 212038993}
   _physicsGrabbable: {fileID: 212038990}
   _resetGrabOnGrabsUpdated: 1
@@ -16016,4 +16039,4 @@ SceneRoots:
   - {fileID: 1616710692}
   - {fileID: 1023050876}
   - {fileID: 1551649752}
-  - {fileID: 1427155063}
+  - {fileID: 1437799984}

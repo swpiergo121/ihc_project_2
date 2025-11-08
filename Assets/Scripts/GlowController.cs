@@ -38,6 +38,11 @@ namespace Oculus.Interaction
         [Tooltip("Arrastra aquí el objeto hijo que contiene el material de brillo.")]
         [SerializeField]
         private GameObject _glowObject;
+
+        [Tooltip("Arrastra aquí el objeto que contiene la pila de descarte.")]
+        [SerializeField]
+        private GameObject _discardPile;
+
         /// <summary>
         /// A One Grab...Transformer component, which should be attached to the grabbable object. Defaults to One Grab Free Transformer.
         /// If you set the Two Grab Transformer property and still want to use one hand for grabs, you must set this property as well.
@@ -148,6 +153,10 @@ namespace Oculus.Interaction
             {
                 _glowObject.SetActive(false);
             }
+            if (_discardPile != null)
+            {
+                _discardPile.SetActive(false);
+            }
             Debug.Log("Grabbable script AWAKE on: " + this.gameObject.name);
         }
 
@@ -229,6 +238,10 @@ namespace Oculus.Interaction
                     {
                         _glowObject.SetActive(false);
                     }
+                    if (_discardPile != null)
+                    {
+                        _discardPile.SetActive(false);
+                    }
                     ForceMove(evt);
                     EndTransform();
                     break;
@@ -236,6 +249,10 @@ namespace Oculus.Interaction
                     if (_glowObject != null)
                     {
                         _glowObject.SetActive(false);
+                    }
+                    if (_discardPile != null)
+                    {
+                        _discardPile.SetActive(false);
                     }
                     EndTransform();
                     break;
@@ -249,6 +266,10 @@ namespace Oculus.Interaction
                     if (_glowObject != null)
                     {
                         _glowObject.SetActive(true);
+                    }
+                    if (_discardPile != null)
+                    {
+                        _discardPile.SetActive(true);
                     }
                     BeginTransform();
                     break;
@@ -330,22 +351,7 @@ namespace Oculus.Interaction
             _activeTransformer.BeginTransform();
         }
 
-        private void HandleGrab(PointerEvent evt)
-        {
-            if (_glowObject != null)
-            {
-                _glowObject.SetActive(true);
-            }
-        }
-
-        // Se llama cuando el objeto es soltado
-        private void HandleRelease(PointerEvent evt)
-        {
-            if (_glowObject != null)
-            {
-                _glowObject.SetActive(false);
-            }
-        }
+     
         private void UpdateTransform()
         {
             if (_activeTransformer == null)
