@@ -148,10 +148,12 @@ namespace Oculus.Interaction
             {
                 _glowObject.SetActive(false);
             }
+            Debug.Log("Grabbable script AWAKE on: " + this.gameObject.name);
         }
 
         protected override void Start()
         {
+            Debug.Log("Grabbable script START on: " + this.gameObject.name);
             this.BeginStart(ref _started, () => base.Start());
 
             if (_targetTransform == null)
@@ -216,16 +218,25 @@ namespace Oculus.Interaction
 
         public override void ProcessPointerEvent(PointerEvent evt)
         {
+            Debug.Log("Grabbable script ProcessPointerEvent: " + evt.Type + " on " + this.gameObject.name);
             switch (evt.Type)
             {
                 case PointerEventType.Select:
                     EndTransform();
                     break;
                 case PointerEventType.Unselect:
+                    if (_glowObject != null)
+                    {
+                        _glowObject.SetActive(false);
+                    }
                     ForceMove(evt);
                     EndTransform();
                     break;
                 case PointerEventType.Cancel:
+                    if (_glowObject != null)
+                    {
+                        _glowObject.SetActive(false);
+                    }
                     EndTransform();
                     break;
             }
@@ -235,6 +246,10 @@ namespace Oculus.Interaction
             switch (evt.Type)
             {
                 case PointerEventType.Select:
+                    if (_glowObject != null)
+                    {
+                        _glowObject.SetActive(true);
+                    }
                     BeginTransform();
                     break;
                 case PointerEventType.Unselect:
