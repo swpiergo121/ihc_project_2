@@ -1030,6 +1030,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5850239337257734329, guid: 2d25383b1b3051f40a300fc7c4e80471, type: 3}
+      propertyPath: title
+      value: 
+      objectReference: {fileID: 197586296}
     - target: {fileID: 5850239337257734332, guid: 2d25383b1b3051f40a300fc7c4e80471, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1141,6 +1145,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b213855fbbafeb4498eb9f80e55bc5e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &197586296 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6424691310197578344, guid: 2d25383b1b3051f40a300fc7c4e80471, type: 3}
+  m_PrefabInstance: {fileID: 197586293}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &218015716
@@ -3945,6 +3960,7 @@ GameObject:
   - component: {fileID: 604017477}
   - component: {fileID: 604017476}
   - component: {fileID: 604017475}
+  - component: {fileID: 604017478}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4026,6 +4042,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &604017478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604017474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &606558282
 GameObject:
   m_ObjectHideFlags: 0
@@ -8762,6 +8822,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1625332530}
   - component: {fileID: 1625332529}
+  - component: {fileID: 1625332531}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -8846,6 +8907,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1625332531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1625332528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1001 &1660783737
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11718,6 +11802,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 610607659}
     m_Modifications:
+    - target: {fileID: 5850239337257734329, guid: 2d25383b1b3051f40a300fc7c4e80471, type: 3}
+      propertyPath: title
+      value: 
+      objectReference: {fileID: 5850239335821287768}
     - target: {fileID: 5850239337257734332, guid: 2d25383b1b3051f40a300fc7c4e80471, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -11815,6 +11903,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d25383b1b3051f40a300fc7c4e80471, type: 3}
+--- !u!114 &5850239335821287768 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6424691310197578344, guid: 2d25383b1b3051f40a300fc7c4e80471, type: 3}
+  m_PrefabInstance: {fileID: 5850239335821287767}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5850239336074968024
 GameObject:
   m_ObjectHideFlags: 0
