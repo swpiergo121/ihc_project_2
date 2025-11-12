@@ -34,33 +34,75 @@ namespace GamePlay.Server.Controller.GameState
                 Debug.LogError("[Server] currentPlayerIndex does not match, this should not happen");
                 CurrentRoundStatus.CurrentPlayerIndex = CurrentPlayerIndex;
             }
+
             UpdateRoundStatus();
             Debug.Log($"[Server] CurrentRoundStatus: {CurrentRoundStatus}");
+
             responds = new bool[players.Count];
             operations = new OutTurnOperation[players.Count];
             var rivers = CurrentRoundStatus.Rivers;
+
             // Get messages and send them to players
             for (int i = 0; i < players.Count; i++)
             {
-                var info = new EventMessages.DiscardOperationInfo
+                // 1. Get all possible operations for this player
+                var possibleOperations = GetOperations(i);
+
+                if (CurrentRoundStatus.IsBot(i))
                 {
-                    PlayerIndex = i,
-                    CurrentTurnPlayerIndex = CurrentPlayerIndex,
-                    IsRichiing = IsRichiing,
-                    DiscardingLastDraw = DiscardLastDraw,
-                    Tile = DiscardTile,
-                    BonusTurnTime = CurrentRoundStatus.GetBonusTurnTime(i),
-                    Zhenting = CurrentRoundStatus.IsZhenting(i),
-                    Operations = GetOperations(i),
-                    HandTiles = CurrentRoundStatus.HandTiles(i),
-                    Rivers = rivers
-                };
-                var player = CurrentRoundStatus.GetPlayer(i);
-                ClientBehaviour.Instance.photonView.RPC("RpcDiscardOperation", player, info);
+                    // === THIS IS A BOT ===
+                    // 2. Decide what the bot will do
+                    operations[i] = DecideBotOutTurnAction(possibleOperations);
+                    // 3. Mark the bot as "responded"
+                    responds[i] = true;
+                    Debug.Log($"[Server] Bot {i} auto-responded with: {operations[i].Type}");
+                }
+                else
+                {
+                    // === THIS IS A HUMAN ===
+                    // 2. Send RPC with possible operations
+                    var info = new EventMessages.DiscardOperationInfo
+                    {
+                        PlayerIndex = i,
+                        CurrentTurnPlayerIndex = CurrentPlayerIndex,
+                        IsRichiing = IsRichiing,
+                        DiscardingLastDraw = DiscardLastDraw,
+                        Tile = DiscardTile,
+                        BonusTurnTime = CurrentRoundStatus.GetBonusTurnTime(i),
+                        Zhenting = CurrentRoundStatus.IsZhenting(i),
+                        Operations = possibleOperations, // Pass the possibilities
+                        HandTiles = CurrentRoundStatus.HandTiles(i),
+                        Rivers = rivers
+                    };
+                    var player = CurrentRoundStatus.GetPlayer(i); // Safe, not a bot
+                    ClientBehaviour.Instance.photonView.RPC("RpcDiscardOperation", player, info);
+
+                    // 3. Mark human as "not responded" (we are waiting for their event)
+                    responds[i] = false;
+                }
             }
+
             firstSendTime = Time.time;
             serverTimeOut = gameSettings.BaseTurnTime + CurrentRoundStatus.MaxBonusTurnTime
                 + ServerConstants.ServerTimeBuffer;
+        }
+
+        /// <summary>
+        /// Simple AI to decide which out-turn operation to take.
+        /// It takes the highest priority one available.
+        /// </summary>
+        private OutTurnOperation DecideBotOutTurnAction(OutTurnOperation[] possibleOps)
+        {
+            // This doesn't work so we take a simple behavior for the bot
+            // var rong = possibleOps.FirstOrDefault(op => op.Type == OutTurnOperationType.Rong);
+            // if (rong != null)
+            // {
+            // Debug.Log($"[Server] Bot AI: Choosing Rong.");
+            // return rong;
+            // }
+            // 5. Skip (Default)
+            // GetOperations always includes a Skip option, so this is safe.
+            return possibleOps.First(op => op.Type == OutTurnOperationType.Skip);
         }
 
         private void UpdateRoundStatus()

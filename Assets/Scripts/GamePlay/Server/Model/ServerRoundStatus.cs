@@ -34,15 +34,44 @@ namespace GamePlay.Server.Model
         private bool[] discardZhenting;
         private bool[] richiZhenting;
         private int[] beiDoras;
-        private IList<int> playerActorNumbers;
-        private IDictionary<int, string> playerNames;
 
-        public ServerRoundStatus(GameSetting gameSettings, IList<Player> players)
+        private string[] playerNicknames; // The full list of names, e.g., ["Human1", "Bot 1", "Human2", "Bot 2"]
+        private int[] playerActorNumbers; // Stores ActorNumber for humans, and -1 for bots
+        private bool[] isBotPlayer;       // A simple lookup, e.g., [false, true, false, true]
+
+        public ServerRoundStatus(GameSetting gameSettings, IList<Player> humanPlayers, string[] seatOrder)
         {
             GameSettings = gameSettings;
-            points = new int[TotalPlayers];
-            playerActorNumbers = players.Select(p => p.ActorNumber).ToList();
-            playerNames = players.ToDictionary(p => p.ActorNumber, p => p.NickName);
+            int totalPlayers = seatOrder.Length; // This should be 4
+
+            // Initialize all our new arrays
+            points = new int[totalPlayers];
+            playerNicknames = new string[totalPlayers];
+            playerActorNumbers = new int[totalPlayers];
+            isBotPlayer = new bool[totalPlayers];
+
+            // Loop through the seat order and populate our lists
+            for (int i = 0; i < totalPlayers; i++)
+            {
+                string name = seatOrder[i];
+                playerNicknames[i] = name;
+
+                // Try to find this name in the human player list
+                var human = humanPlayers.FirstOrDefault(p => p.NickName == name);
+
+                if (human != null)
+                {
+                    // This is a HUMAN player
+                    isBotPlayer[i] = false;
+                    playerActorNumbers[i] = human.ActorNumber;
+                }
+                else
+                {
+                    // This is a BOT
+                    isBotPlayer[i] = true;
+                    playerActorNumbers[i] = -1; // Use -1 as a flag for bots
+                }
+            }
         }
 
         public GameSetting GameSettings { get; }
@@ -60,11 +89,28 @@ namespace GamePlay.Server.Model
         }
         public Player GetPlayer(int playerIndex)
         {
+            // First, check if this index is a bot. If so, return null.
+            if (isBotPlayer[playerIndex])
+            {
+                return null;
+            }
+
             var room = PhotonNetwork.CurrentRoom;
             if (room == null) throw new ArgumentException("This should not happen");
             int actorNumber = playerActorNumbers[playerIndex];
             return room.Players[actorNumber];
         }
+
+        // --- NEW HELPER METHOD ---
+        /// <summary>
+        /// Checks if the player at the given seat index is a bot.
+        /// </summary>
+        public bool IsBot(int playerIndex)
+        {
+            CheckRange(playerIndex);
+            return isBotPlayer[playerIndex];
+        }
+
         public IList<int> PlayerActorNumbers => playerActorNumbers;
         public int OyaPlayerIndex => oya;
         public int Field => field;
@@ -108,13 +154,14 @@ namespace GamePlay.Server.Model
         }
         public bool FirstTurn => firstTurn;
         public int TotalPlayers => GameSettings.MaxPlayer;
-        public string[] PlayerNames => playerActorNumbers.Select(id => playerNames[id]).ToArray();
+        public string[] PlayerNames => playerNicknames;
         public int KongClaimed => kongClaimed;
         public int MaxBonusTurnTime => bonusTurnTime.Max();
 
         public string GetPlayerName(int index)
         {
-            return playerNames[playerActorNumbers[index]];
+            CheckRange(index);
+            return playerNicknames[index];
         }
 
         public void ClaimKong()

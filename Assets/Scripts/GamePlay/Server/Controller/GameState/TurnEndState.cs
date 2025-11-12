@@ -28,6 +28,8 @@ namespace GamePlay.Server.Controller.GameState
         private float serverTurnEndTimeOut;
         private float firstTime;
 
+        private bool waitingForHuman; // Flag to track if we are waiting for a human
+
         public override void OnServerStateEnter()
         {
             if (CurrentRoundStatus.CurrentPlayerIndex != CurrentPlayerIndex)
@@ -35,10 +37,14 @@ namespace GamePlay.Server.Controller.GameState
                 Debug.LogError("CurrentPlayerIndex does not match, this should not happen");
                 CurrentRoundStatus.CurrentPlayerIndex = CurrentPlayerIndex;
             }
+
             firstTime = Time.time;
+            waitingForHuman = false; // Default to false
+
             // determines the operation to take when turn ends
             operationChosen = ChooseOperations();
             Debug.Log($"The operation chosen by this round is {operationChosen}, operation after choosing: {string.Join(",", Operations)}");
+
             // if operation is not rong or round-draw, perform richi and test zhenting
             if (operationChosen != OutTurnOperationType.Rong && operationChosen != OutTurnOperationType.RoundDraw)
             {
@@ -47,9 +53,21 @@ namespace GamePlay.Server.Controller.GameState
                 CurrentRoundStatus.UpdateDiscardZhenting();
                 CurrentRoundStatus.UpdateRichiZhenting(DiscardingTile);
             }
+
             // Send messages to clients
-            for (int i = 0; i < players.Count; i++)
+            for (int i = 0; i < players.Count; i++) // players.Count is TotalPlayers
             {
+                // === BOT LOGIC: Skip sending RPCs to bots ===
+                if (CurrentRoundStatus.IsBot(i))
+                {
+                    if (Operations[i].Type != OutTurnOperationType.Skip)
+                    {
+                        Debug.Log($"[Server] Bot {i} has a valid operation: {Operations[i].Type}. (AI will auto-select)");
+                    }
+                    continue; // Skip bots
+                }
+
+                // === HUMAN LOGIC: Send RPC ===
                 var info = new EventMessages.TurnEndInfo
                 {
                     PlayerIndex = i,
@@ -61,15 +79,35 @@ namespace GamePlay.Server.Controller.GameState
                     Zhenting = CurrentRoundStatus.IsZhenting(i),
                     MahjongSetData = MahjongSet.Data
                 };
-                var player = CurrentRoundStatus.GetPlayer(i);
+                var player = CurrentRoundStatus.GetPlayer(i); // Safe, not a bot
                 ClientBehaviour.Instance.photonView.RPC("RpcTurnEnd", player, info);
+
+                // If this human has an operation, we must wait for them
+                if (Operations[i].Type != OutTurnOperationType.Skip)
+                {
+                    waitingForHuman = true;
+                }
             }
+
             serverTurnEndTimeOut = operationChosen == OutTurnOperationType.Rong || operationChosen == OutTurnOperationType.RoundDraw ?
                 ServerConstants.ServerTurnEndTimeOutExtra : ServerConstants.ServerTurnEndTimeOut;
+
             if (operationChosen == OutTurnOperationType.Chow
                 || operationChosen == OutTurnOperationType.Pong
                 || operationChosen == OutTurnOperationType.Kong)
                 CurrentRoundStatus.BreakOneShotsAndFirstTurn();
+
+            // === NEW LOGIC: If no humans need to act, proceed immediately ===
+            if (!waitingForHuman)
+            {
+                Debug.Log("[Server] No humans have an operation. Proceeding immediately.");
+                firstTime = 0; // Prevent timeout from running
+                TurnEndTimeOut(); // Call the timeout logic now
+            }
+            else
+            {
+                Debug.Log("[Server] Waiting for human player(s) to respond...");
+            }
         }
 
         private OutTurnOperationType ChooseOperations()

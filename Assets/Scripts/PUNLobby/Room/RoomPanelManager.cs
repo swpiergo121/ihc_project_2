@@ -7,6 +7,7 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils;
+using ExitGames.Client.Photon; // <--- ADD THIS LINE
 
 namespace PUNLobby.Room
 {
@@ -80,24 +81,44 @@ namespace PUNLobby.Room
         {
             var launcher = RoomLauncher.Instance;
             var room = PhotonNetwork.CurrentRoom;
-            if (room.PlayerCount < room.MaxPlayers)
-            {
-                Debug.Log("Not enough players");
-                warningPanel.Show(400, 200, "Not enough players.");
-                return;
-            }
-            if (CheckReadiness())
-            {
-                Debug.Log("Game is starting");
-                var setting = (GameSetting)room.CustomProperties[SettingKeys.SETTING];
-                SaveSettings(setting);
-                launcher.GameStart();
-            }
-            else
+
+            // 1. First, check if all HUMAN players are ready
+            if (!CheckReadiness())
             {
                 Debug.Log("Game cannot start, since some players are not ready");
                 warningPanel.Show(400, 200, "Game cannot start, some players are not ready.");
+                return;
             }
+
+            // 2. All humans are ready. Now, calculate how many bots to add.
+            // This replaces the old "Not enough players" check.
+            int botsToSpawn = 0;
+            if (room.PlayerCount < room.MaxPlayers)
+            {
+                botsToSpawn = room.MaxPlayers - room.PlayerCount;
+                Debug.Log($"Room is not full. Starting game with {room.PlayerCount} players and {botsToSpawn} bots.");
+            }
+            else
+            {
+                Debug.Log($"Room is full. Starting game with {room.PlayerCount} players.");
+            }
+
+            // 3. Save the bot count to the Room's Custom Properties.
+            // This is the critical step. All clients will receive this update
+            // and know how many bots to spawn in the game scene.
+            var roomProps = new Hashtable
+            {
+                { SettingKeys.BOT_COUNT, botsToSpawn } // You'll need to add BOT_COUNT to your SettingKeys class
+            };
+            room.SetCustomProperties(roomProps);
+
+            // 4. Save settings locally (as before)
+            var setting = (GameSetting)room.CustomProperties[SettingKeys.SETTING];
+            SaveSettings(setting);
+
+            // 5. Start the game (as before)
+            Debug.Log("Game is starting");
+            launcher.GameStart();
         }
 
         private bool CheckReadiness()

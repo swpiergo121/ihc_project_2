@@ -26,44 +26,92 @@ namespace GamePlay.Server.Controller.GameState
         public override void OnServerStateEnter()
         {
             PhotonNetwork.AddCallbackTarget(this);
+            // 1. Draw the tile
             if (IsLingShang)
                 justDraw = MahjongSet.DrawLingShang();
             else
                 justDraw = MahjongSet.DrawTile();
+
+            // 2. Update status
             CurrentRoundStatus.CurrentPlayerIndex = CurrentPlayerIndex;
             CurrentRoundStatus.LastDraw = justDraw;
             CurrentRoundStatus.CheckFirstTurn(CurrentPlayerIndex);
             CurrentRoundStatus.BreakTempZhenting(CurrentPlayerIndex);
-            Debug.Log($"[Server] Distribute a tile {justDraw} to current turn player {CurrentPlayerIndex}, "
-                + $"first turn: {CurrentRoundStatus.FirstTurn}.");
-            var room = PhotonNetwork.CurrentRoom;
-            for (int i = 0; i < players.Count; i++)
+
+            // 3. === FORK IN THE ROAD: Check if player is a bot ===
+            if (CurrentRoundStatus.IsBot(CurrentPlayerIndex))
             {
-                if (i == CurrentPlayerIndex) continue;
-                var info = new EventMessages.DrawTileInfo
-                {
-                    PlayerIndex = i,
-                    DrawPlayerIndex = CurrentPlayerIndex,
-                    MahjongSetData = MahjongSet.Data
-                };
-                var player = CurrentRoundStatus.GetPlayer(i);
-                ClientBehaviour.Instance.photonView.RPC("RpcDrawTile", player, info);
+                // ---------------
+                // IS A BOT
+                // ---------------
+                Debug.Log($"[Server] Bot {CurrentPlayerIndex} drew tile {justDraw}. Thinking...");
+
+                // 3a. Get the bot's possible operations
+                var operations = GetOperations(CurrentPlayerIndex);
+
+                // 3b. Decide on an action (discard always)
+             
+                // --- AI Decision: DISCARD ---
+                // Simple AI: Discard the tile it just drew.
+                Debug.Log($"[Server] Bot {CurrentPlayerIndex} is discarding {justDraw}.");
+
+                // Directly call the ServerBehaviour to change state
+                ServerBehaviour.Instance.DiscardTile(
+                    CurrentPlayerIndex,
+                    justDraw,
+                    false, // IsRichiing
+                    true,  // DiscardingLastDraw
+                    0,     // BonusTurnTime
+                    TurnDoraAfterDiscard
+                );
+                
             }
-            var currentPlayer = CurrentRoundStatus.GetPlayer(CurrentPlayerIndex);
-            ClientBehaviour.Instance.photonView.RPC("RpcDrawTile", currentPlayer, new EventMessages.DrawTileInfo
+            else
             {
-                PlayerIndex = CurrentPlayerIndex,
-                DrawPlayerIndex = CurrentPlayerIndex,
-                Tile = justDraw,
-                BonusTurnTime = CurrentRoundStatus.GetBonusTurnTime(CurrentPlayerIndex),
-                Zhenting = CurrentRoundStatus.IsZhenting(CurrentPlayerIndex),
-                Operations = GetOperations(CurrentPlayerIndex),
-                MahjongSetData = MahjongSet.Data
-            });
-            firstSendTime = Time.time;
-            serverTimeOut = gameSettings.BaseTurnTime
-                + CurrentRoundStatus.GetBonusTurnTime(CurrentPlayerIndex)
-                + ServerConstants.ServerTimeBuffer;
+                // ---------------
+                // IS A HUMAN
+                // ---------------
+                // This is your original code.
+                Debug.Log($"[Server] Human player {CurrentPlayerIndex} drew tile {justDraw}. Sending RPCs.");
+
+                // 3c. Send RPCs to OTHER human players
+                for (int i = 0; i < CurrentRoundStatus.TotalPlayers; i++)
+                {
+                    if (i == CurrentPlayerIndex) continue;
+
+                    // Only send RPCs to other humans
+                    if (!CurrentRoundStatus.IsBot(i))
+                    {
+                        var info = new EventMessages.DrawTileInfo
+                        {
+                            PlayerIndex = i,
+                            DrawPlayerIndex = CurrentPlayerIndex,
+                            MahjongSetData = MahjongSet.Data
+                        };
+                        var player = CurrentRoundStatus.GetPlayer(i); // Safe, not a bot
+                        ClientBehaviour.Instance.photonView.RPC("RpcDrawTile", player, info);
+                    }
+                }
+
+                // 3d. Send RPC to the CURRENT (human) player
+                var currentPlayer = CurrentRoundStatus.GetPlayer(CurrentPlayerIndex); // Safe, not a bot
+                ClientBehaviour.Instance.photonView.RPC("RpcDrawTile", currentPlayer, new EventMessages.DrawTileInfo
+                {
+                    PlayerIndex = CurrentPlayerIndex,
+                    DrawPlayerIndex = CurrentPlayerIndex,
+                    Tile = justDraw,
+                    BonusTurnTime = CurrentRoundStatus.GetBonusTurnTime(CurrentPlayerIndex),
+                    Zhenting = CurrentRoundStatus.IsZhenting(CurrentPlayerIndex),
+                    Operations = GetOperations(CurrentPlayerIndex), // Get operations for the human
+                    MahjongSetData = MahjongSet.Data
+                });
+
+                // 3e. Start the timeout
+                firstSendTime = Time.time;
+                serverTimeOut = gameSettings.BaseTurnTime
+                    + CurrentRoundStatus.GetBonusTurnTime(CurrentPlayerIndex)
+                    + ServerConstants.ServerTimeBuffer;
+            }
         }
 
         private InTurnOperation[] GetOperations(int playerIndex)
