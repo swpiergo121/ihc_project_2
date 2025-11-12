@@ -74,6 +74,11 @@ namespace GamePlay.Server.Controller.GameState
                         HandTiles = CurrentRoundStatus.HandTiles(i),
                         Rivers = rivers
                     };
+                    if (CurrentRoundStatus.IsBot(i))
+                    {
+                        Debug.Log($"[Server] Skipping RpcGamePrepare for Bot {i}");
+                        continue; // Do not send RPCs to bots
+                    }
                     var player = CurrentRoundStatus.GetPlayer(i); // Safe, not a bot
                     ClientBehaviour.Instance.photonView.RPC("RpcDiscardOperation", player, info);
 

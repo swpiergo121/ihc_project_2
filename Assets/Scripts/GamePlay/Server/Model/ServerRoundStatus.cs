@@ -44,6 +44,13 @@ namespace GamePlay.Server.Model
             GameSettings = gameSettings;
             int totalPlayers = seatOrder.Length; // This should be 4
 
+            // --- ADD THESE DEBUG LOGS ---
+            Debug.LogWarning("--- [DEBUG] ServerRoundStatus Constructor START ---");
+            Debug.Log($"[DEBUG] Received {totalPlayers} players");
+            Debug.Log($"[DEBUG] Received {humanPlayers.Count} human players: {string.Join(", ", humanPlayers.Select(p => p.NickName))}");
+            Debug.Log($"[DEBUG] Received {seatOrder.Length} seat order: {string.Join(", ", seatOrder)}");
+            // --- END DEBUG LOGS ---
+
             // Initialize all our new arrays
             points = new int[totalPlayers];
             playerNicknames = new string[totalPlayers];
@@ -62,12 +69,14 @@ namespace GamePlay.Server.Model
                 if (human != null)
                 {
                     // This is a HUMAN player
+                    Debug.Log($"[DEBUG] Seat {i} ({name}): Found HUMAN. ActorNumber: {human.ActorNumber}");
                     isBotPlayer[i] = false;
                     playerActorNumbers[i] = human.ActorNumber;
                 }
                 else
                 {
                     // This is a BOT
+                    Debug.LogWarning($"[DEBUG] Seat {i} ({name}): NOT FOUND. Marking as BOT. ActorNumber: -1");
                     isBotPlayer[i] = true;
                     playerActorNumbers[i] = -1; // Use -1 as a flag for bots
                 }
@@ -92,8 +101,10 @@ namespace GamePlay.Server.Model
             // First, check if this index is a bot. If so, return null.
             if (isBotPlayer[playerIndex])
             {
+                Debug.Log($"[DEBUG] GetPlayer: playerIndex {playerIndex} is a BOT. Returning null.");
                 return null;
             }
+            Debug.LogWarning($"[DEBUG] GetPlayer: playerIndex {playerIndex} is HUMAN. Trying to find ActorNumber {playerActorNumbers[playerIndex]}.");
 
             var room = PhotonNetwork.CurrentRoom;
             if (room == null) throw new ArgumentException("This should not happen");
@@ -415,6 +426,17 @@ namespace GamePlay.Server.Model
             if (!GameSettings.Allow4WindDraw) return false;
             if (!FirstTurn) return false;
             if (TotalPlayers < 4) return false;
+
+            // --- ADD THIS FIX (line 421) ---
+            // Check if any player's river is empty. If so, it's not a four-wind draw.
+            Debug.Log("[DEBUG] CheckFourWinds: Checking for empty rivers...");
+            if (rivers.Any(river => river.Count == 0))
+            {
+                Debug.Log("[DEBUG] CheckFourWinds: Found an empty river. Skipping check. (SUCCESS)");
+                return false;
+            }
+            // --- END OF FIX ---
+
             var first = rivers[0][0].Tile;
             for (int i = 1; i < TotalPlayers; i++)
             {

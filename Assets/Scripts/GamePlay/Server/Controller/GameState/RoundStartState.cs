@@ -53,6 +53,11 @@ namespace GamePlay.Server.Controller.GameState
                     InitialHandTiles = tiles,
                     MahjongSetData = MahjongSet.Data
                 };
+                if (CurrentRoundStatus.IsBot(index))
+                {
+                    Debug.Log($"[Server] Skipping RpcGamePrepare for Bot {index}");
+                    continue; // Do not send RPCs to bots
+                }
                 var player = CurrentRoundStatus.GetPlayer(index);
                 ClientBehaviour.Instance.photonView.RPC("RpcRoundStart", player, info);
             }
