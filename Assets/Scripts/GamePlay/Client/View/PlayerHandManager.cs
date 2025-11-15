@@ -20,18 +20,26 @@ namespace GamePlay.Client.View
         private TileInstance lastDrawInstance;
         private bool discarding = false;
         private WaitForSeconds discardingWait = new WaitForSeconds(MahjongConstants.PlayerHandTilesSortDelay);
+        private VRHandTile[] handTileVR;
+        private VRHandTile lastDrawVR;
 
         private void OnEnable()
         {
             handTileTransforms = new Transform[handHolder.childCount];
             handTileInstances = new TileInstance[handHolder.childCount];
+            handTileVR = new VRHandTile[handHolder.childCount]; // New line
+
             for (int i = 0; i < handHolder.childCount; i++)
             {
                 handTileTransforms[i] = handHolder.GetChild(i);
                 handTileInstances[i] = handTileTransforms[i].GetComponent<TileInstance>();
+                handTileVR[i] = handTileTransforms[i].GetComponent<VRHandTile>(); // New line
             }
+
             lastDrawTransform = drawnHolder.GetChild(0);
             lastDrawInstance = lastDrawTransform.GetComponent<TileInstance>();
+            lastDrawVR = lastDrawTransform.GetComponent<VRHandTile>(); // New line
+            if (lastDrawVR != null) lastDrawVR.IsLastDraw = true; // Set this prefab's role
         }
 
         private void Update()
@@ -58,17 +66,25 @@ namespace GamePlay.Client.View
             {
                 handTileInstances[i].SetTile(HandTiles[i]);
             }
+
+            if (HandTiles == null) return;
+
+            for (int i = 0; i < HandTiles.Count; i++)
+            {
+                handTileInstances[i].SetTile(HandTiles[i]); // Update the visual
+                handTileVR[i].SetTile(HandTiles[i]);        // Update the interaction logic
+            }
         }
 
         private void LastDrawTile()
         {
             if (LastDraw == null)
             {
-                lastDrawTransform.gameObject.SetActive(false);
+                // lastDrawTransform.gameObject.SetActive(false);
                 return;
             }
-            lastDrawInstance.SetTile((Tile)LastDraw);
-            lastDrawTransform.gameObject.SetActive(true);
+            lastDrawInstance.SetTile((Tile)LastDraw); // Update the visual
+            lastDrawVR.SetTile((Tile)LastDraw);       // Update the interaction logic
             var p = drawnHolder.transform.localPosition;
             drawnHolder.transform.localPosition = new Vector3(
                 Count * MahjongConstants.HandTileWidth + MahjongConstants.LastDrawGap, p.y, p.z);
