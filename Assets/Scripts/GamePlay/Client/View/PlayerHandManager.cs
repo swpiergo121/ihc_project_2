@@ -22,6 +22,25 @@ namespace GamePlay.Client.View
         private WaitForSeconds discardingWait = new WaitForSeconds(MahjongConstants.PlayerHandTilesSortDelay);
         private VRHandTile[] handTileVR;
         private VRHandTile lastDrawVR;
+        [Header("VR Setup")]
+        public DiscardArea HandDiscardBorder;
+
+        // In PlayerHandManager.cs
+        public void AssignDiscardBorder(DiscardArea border)
+        {
+            HandDiscardBorder = border;
+
+            // Pass it down to the VR tiles
+            if (handTileVR != null)
+            {
+                foreach (var tile in handTileVR)
+                {
+                    if (tile != null) tile.SetDiscardIndicator(HandDiscardBorder);
+                }
+            }
+
+            if (lastDrawVR != null) lastDrawVR.SetDiscardIndicator(HandDiscardBorder);
+        }
 
         private void OnEnable()
         {
@@ -34,12 +53,21 @@ namespace GamePlay.Client.View
                 handTileTransforms[i] = handHolder.GetChild(i);
                 handTileInstances[i] = handTileTransforms[i].GetComponent<TileInstance>();
                 handTileVR[i] = handTileTransforms[i].GetComponent<VRHandTile>(); // New line
+                                                                                  // 2. ASSIGN THE BORDER HERE
+                if (handTileVR[i] != null)
+                {
+                    handTileVR[i].SetDiscardIndicator(HandDiscardBorder);
+                }
             }
 
             lastDrawTransform = drawnHolder.GetChild(0);
             lastDrawInstance = lastDrawTransform.GetComponent<TileInstance>();
             lastDrawVR = lastDrawTransform.GetComponent<VRHandTile>(); // New line
-            if (lastDrawVR != null) lastDrawVR.IsLastDraw = true; // Set this prefab's role
+            if (lastDrawVR != null)
+            {
+                lastDrawVR.IsLastDraw = true;
+                lastDrawVR.SetDiscardIndicator(HandDiscardBorder); // Assign here too
+            }
         }
 
         private void Update()

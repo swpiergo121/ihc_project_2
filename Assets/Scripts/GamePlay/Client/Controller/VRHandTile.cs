@@ -5,6 +5,7 @@ using DG.Tweening;
 
 // Use the Oculus Interaction namespace
 using Oculus.Interaction;
+using System;
 
 // This script now requires the Oculus Grabbable
 [RequireComponent(typeof(Oculus.Interaction.Grabbable))]
@@ -12,7 +13,7 @@ using Oculus.Interaction;
 public class VRHandTile : MonoBehaviour
 {
     [Tooltip("Drag your scene's 'DiscardIndicator' GameObject here.")]
-    [SerializeField] private DiscardArea discardIndicator; // Your DiscardArea script from before
+    private DiscardArea discardIndicator;
 
     public bool IsLastDraw;
     public Tile Tile { get; private set; }
@@ -26,6 +27,11 @@ public class VRHandTile : MonoBehaviour
     private Vector3 originalLocalPosition;
     private const float hoverLiftAmount = 0.02f;
     private const float AnimationDuration = 0.2f;
+
+    public void SetDiscardIndicator(DiscardArea indicator)
+    {
+        this.discardIndicator = indicator;
+    }
 
     void Awake()
     {
@@ -163,5 +169,10 @@ public class VRHandTile : MonoBehaviour
         if (oculusGrabbable.MaxGrabPoints == 0 || IsHeld) return;
         transform.DOLocalMoveY(originalLocalPosition.y, AnimationDuration);
         // ... (Hint logic)
+    }
+
+    internal void SetDiscardIndicator(GamePlay.Client.View.DiscardArea handDiscardBorder)
+    {
+        throw new NotImplementedException();
     }
 }
