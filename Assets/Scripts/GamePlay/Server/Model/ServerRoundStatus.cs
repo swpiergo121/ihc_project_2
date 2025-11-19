@@ -81,6 +81,9 @@ namespace GamePlay.Server.Model
                     playerActorNumbers[i] = -1; // Use -1 as a flag for bots
                 }
             }
+    
+            
+
         }
 
         public GameSetting GameSettings { get; }
@@ -182,7 +185,32 @@ namespace GamePlay.Server.Model
 
         public void ShufflePlayers()
         {
-            playerActorNumbers.Shuffle();
+            // 1. Create a list of indices [0, 1, 2, 3]
+            var indices = new List<int>();
+            for (int i = 0; i < TotalPlayers; i++)
+            {
+                indices.Add(i);
+            }
+
+            // 2. Shuffle the indices (using your existing Shuffle extension)
+            indices.Shuffle();
+
+            // 3. Create temporary copies of your arrays
+            var tempActorNumbers = (int[])playerActorNumbers.Clone();
+            var tempIsBot = (bool[])isBotPlayer.Clone();
+            var tempNames = (string[])playerNicknames.Clone();
+
+            // 4. Reassign all arrays based on the shuffled indices
+            for (int i = 0; i < TotalPlayers; i++)
+            {
+                int originalIndex = indices[i];
+
+                playerActorNumbers[i] = tempActorNumbers[originalIndex];
+                isBotPlayer[i] = tempIsBot[originalIndex];
+                playerNicknames[i] = tempNames[originalIndex];
+            }
+
+            Debug.LogWarning($"[Server] Players Shuffled. New order: {string.Join(", ", playerNicknames)}");
         }
 
         public int GetBonusTurnTime(int index)
