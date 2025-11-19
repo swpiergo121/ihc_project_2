@@ -173,6 +173,8 @@ public class VRHandTile : MonoBehaviour
 
     internal void SetDiscardIndicator(GamePlay.Client.View.DiscardArea handDiscardBorder)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
+        Debug.Log($"Should do something");
+
     }
 }
