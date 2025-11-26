@@ -38,7 +38,7 @@ namespace Mahjong.Logic
         public static readonly Quaternion FaceUp = Quaternion.Euler(-90, 0, -90);
         public static readonly Quaternion FaceDownOnWall = Quaternion.Euler(180, 180, -90);
         public static readonly Quaternion FaceUpOnWall = Quaternion.Euler(0, 180, -90);
-        public static readonly Quaternion RichiTile = Quaternion.Euler(0, -90, 0);
+        public static readonly Quaternion RichiTile = Quaternion.Euler(-90, 0, 0);
         public static readonly Quaternion RiverTile = Quaternion.Euler(-90, -90, 0);
         public const int YakuItemColumns = 2;
         public const int FullItemCountPerColumn = 4;
@@ -53,7 +53,7 @@ namespace Mahjong.Logic
 
         // Character constants
         public static readonly string[] PositionWinds = {
-            "东", "南", "西", "北"
+            "E", "S", "O", "N"
         };
 
         public static readonly string[] NumberCharacters =

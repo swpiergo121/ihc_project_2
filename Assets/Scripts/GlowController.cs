@@ -144,6 +144,37 @@ namespace Oculus.Interaction
         }
         #endregion
 
+        // Adding: 
+        private MeshRenderer rend;
+        private Material[] mats;
+        private Material outlineMaterial;   // guardaremos el material ORIGINAL
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            rend = GetComponent<MeshRenderer>();
+
+            // --- GUARDAR material original antes de modificar nada ---
+            Material[] original = rend.sharedMaterials;
+            if (original.Length > 1)
+            {
+                outlineMaterial = original[1];   // guardamos el shader del outline
+            }
+
+            // --- AHORA sí modificamos los materials (instanced) ---
+            mats = rend.materials;
+            if (mats.Length > 1)
+            {
+                mats[1] = null;
+                rend.materials = mats;
+            }
+
+            Debug.Log("Outline desactivado en Awake en: " + gameObject.name);
+        }
+
+
+        /*
         protected override void Awake()
         {
             base.Awake();
@@ -159,6 +190,7 @@ namespace Oculus.Interaction
             }
             Debug.Log("Grabbable script AWAKE on: " + this.gameObject.name);
         }
+        */
 
         protected override void Start()
         {
@@ -225,6 +257,102 @@ namespace Oculus.Interaction
             return transformer;
         }
 
+
+        private void EnableOutline()
+        {
+            if (outlineMaterial == null) return;
+
+            var mats = rend.materials;
+            if (mats.Length > 1)
+            {
+                mats[1] = outlineMaterial;
+                rend.materials = mats;
+            }
+        }
+
+        private void DisableOutline()
+        {
+            var mats = rend.materials;
+            if (mats.Length > 1)
+            {
+                mats[1] = null;
+                rend.materials = mats;
+            }
+        }
+
+        public override void ProcessPointerEvent(PointerEvent evt)
+        {
+            Debug.Log("Grabbable script ProcessPointerEvent: " + evt.Type + " on " + this.gameObject.name);
+
+            // ----------- PRIMER SWITCH -----------
+            switch (evt.Type)
+            {
+                case PointerEventType.Select:
+                    EndTransform();
+                    break;
+
+                case PointerEventType.Unselect:
+                    if (_glowObject != null)
+                        _glowObject.SetActive(false);
+
+                    if (_discardPile != null)
+                        _discardPile.SetActive(false);
+
+                    // Desactivar outline
+                    DisableOutline();
+
+                    ForceMove(evt);
+                    EndTransform();
+                    break;
+
+                case PointerEventType.Cancel:
+                    if (_glowObject != null)
+                        _glowObject.SetActive(false);
+
+                    if (_discardPile != null)
+                        _discardPile.SetActive(false);
+
+                    // Desactivar outline
+                    DisableOutline();
+
+                    EndTransform();
+                    break;
+            }
+
+            base.ProcessPointerEvent(evt);
+
+            // ----------- SEGUNDO SWITCH -----------
+            switch (evt.Type)
+            {
+                case PointerEventType.Select:
+
+                    // Activar outline
+                    EnableOutline();
+
+                    if (_glowObject != null)
+                        _glowObject.SetActive(true);
+
+                    if (_discardPile != null)
+                        _discardPile.SetActive(true);
+
+                    BeginTransform();
+                    break;
+
+                case PointerEventType.Unselect:
+                    BeginTransform();
+                    break;
+
+                case PointerEventType.Move:
+                    UpdateTransform();
+                    break;
+            }
+        }
+        
+
+
+
+
+        /*
         public override void ProcessPointerEvent(PointerEvent evt)
         {
             Debug.Log("Grabbable script ProcessPointerEvent: " + evt.Type + " on " + this.gameObject.name);
@@ -281,6 +409,7 @@ namespace Oculus.Interaction
                     break;
             }
         }
+        */
 
         protected override void PointableElementUpdated(PointerEvent evt)
         {
