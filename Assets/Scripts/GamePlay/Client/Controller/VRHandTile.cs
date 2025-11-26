@@ -7,83 +7,63 @@ using DG.Tweening;
 using Oculus.Interaction;
 using System;
 
-// This script now requires the Oculus Grabbable
 [RequireComponent(typeof(Oculus.Interaction.Grabbable))]
 [RequireComponent(typeof(Rigidbody))]
 public class VRHandTile : MonoBehaviour
 {
-    [Tooltip("Drag your scene's 'DiscardIndicator' GameObject here.")]
     private DiscardArea discardIndicator;
 
     public bool IsLastDraw;
     public Tile Tile { get; private set; }
     public bool IsHeld { get; private set; }
 
-    // This is our reference to the Oculus grab script
     private Grabbable oculusGrabbable;
     private Rigidbody rb;
-
-    // Store original position for hover animation
     private Vector3 originalLocalPosition;
     private const float hoverLiftAmount = 0.02f;
     private const float AnimationDuration = 0.2f;
 
-    public void SetDiscardIndicator(DiscardArea indicator)
+    // --- FIX: Correctly assigning the indicator ---
+    internal void SetDiscardIndicator(GamePlay.Client.Controller.DiscardArea area)
     {
-        this.discardIndicator = indicator;
+        this.discardIndicator = area;
     }
 
     void Awake()
     {
-        // Get the required components
         oculusGrabbable = GetComponent<Grabbable>();
         rb = GetComponent<Rigidbody>();
         originalLocalPosition = transform.localPosition;
 
-        // --- NEW EVENT SUBSCRIPTIONS ---
-        // Grabbable inherits from PointableElement, which gives us these events
-
-        // 1. Listen for Grab/Release events
-        // WhenPointerEventRaised is the main event for Select, Unselect, etc.
         oculusGrabbable.WhenPointerEventRaised += HandlePointerEvent;
 
-      
     }
 
     private void OnDestroy()
     {
-        // Always unsubscribe from events when this object is destroyed
         if (oculusGrabbable != null)
         {
             oculusGrabbable.WhenPointerEventRaised -= HandlePointerEvent;
-           
+            
         }
     }
 
-    // --- Main Event Handler ---
-
-    // This method is called by the Grabbable script for Select, Unselect, etc.
     private void HandlePointerEvent(PointerEvent evt)
     {
+        // We switch based on the type of event coming in
         switch (evt.Type)
         {
             case PointerEventType.Select:
                 OnGrab();
                 break;
-
             case PointerEventType.Unselect:
+            case PointerEventType.Cancel:
                 OnDrop();
                 break;
 
-            case PointerEventType.Cancel:
-                // A Cancel is a type of drop
-                OnDrop();
-                break;
         }
     }
 
-    // --- Public Methods (Called by PlayerHandManager) ---
-    // (These are unchanged)
 
     public void SetTile(Tile tile)
     {
@@ -92,89 +72,82 @@ public class VRHandTile : MonoBehaviour
 
     public void SetLock(bool isLocked)
     {
-        // The Oculus Grabbable doesn't have a simple 'enabled' property.
-        // Instead, we can control its 'MaxGrabPoints'
         if (oculusGrabbable != null)
         {
-            oculusGrabbable.MaxGrabPoints = isLocked ? 0 : -1; // 0 = not grabbable, -1 = unlimited
+            oculusGrabbable.MaxGrabPoints = isLocked ? 0 : -1;
         }
     }
 
-    // --- Internal State Handlers ---
+    // --- UPDATED STATE HANDLERS ---
 
     private void OnGrab()
     {
-        if (oculusGrabbable.MaxGrabPoints == 0) return; // Locked
+        if (oculusGrabbable.MaxGrabPoints == 0) return;
+
         IsHeld = true;
 
-        // NOTE: We do NOT change rb.isKinematic here.
-        // The 'Grabbable' script's "Kinematic While Selected"
-        // property will handle all physics changes for us.
+        // Tell the border: "I am holding a tile, add +1 to your count"
+        if (discardIndicator != null)
+        {
+            Debug.Log($"[VRHandTile] Register hold {Tile}");
+
+            discardIndicator.RegisterHold();
+        }
     }
 
     private void OnDrop()
     {
-        IsHeld = false;
-        // The 'Grabbable' script will also handle reparenting
-        // and physics when it's released.
+        // Only run this logic if we were actually holding it
+        if (IsHeld)
+        {
+            IsHeld = false;
+
+            // Tell the border: "I dropped a tile, subtract -1 from your count"
+            if (discardIndicator != null)
+            {
+                Debug.Log($"[VRHandTile] Unregister hold {Tile}");
+                discardIndicator.UnregisterHold();
+            }
+        }
     }
 
-    // --- Physics Trigger (THE DISCARD LOGIC) ---
-    // This method is IDENTICAL to the one from before.
-    // It doesn't care *how* the tile is held, only *that* it is held.
+    // --- PHYSICS TRIGGER ---
 
     private void OnTriggerEnter(Collider other)
     {
+        // We check if we hit the object associated with our DiscardArea script
         if (IsHeld && discardIndicator != null && other.gameObject == discardIndicator.gameObject)
         {
-            Debug.Log($"[VRHandTile] Discarding {Tile} via DiscardArea");
+            Debug.Log($"[VRHandTile] Discarding {Tile}");
 
             Tile tileToDiscard = Tile;
             bool wasLastDraw = IsLastDraw;
 
-            // Force the hand to drop this object
-            ForceDrop();
+            ForceDrop(); // This handles the unregistering logic too
 
-            // Tell the central controller to discard the tile.
             ClientBehaviour.Instance.OnDiscardTile(tileToDiscard, wasLastDraw);
         }
     }
 
-    // --- Helper Methods ---
-
     private void ForceDrop()
     {
-        // To force a drop, we tell all interactors (hands) 
-        // that are currently selecting this object to Unselect.
+        // If we force drop, we must ensure we tell the border 
+        // that we aren't holding it anymore!
+        if (IsHeld)
+        {
+            IsHeld = false;
+            if (discardIndicator != null)
+            {
+                discardIndicator.UnregisterHold();
+            }
+        }
+
         if (oculusGrabbable != null)
         {
             oculusGrabbable.enabled = false;
         }
 
-        // Hide the tile.
         gameObject.SetActive(false);
     }
 
-    // --- Hover Events (Unchanged from XRI version) ---
-
-    private void OnHoverEnter(PointerEvent args)
-    {
-        if (oculusGrabbable.MaxGrabPoints == 0 || IsHeld) return;
-        transform.DOLocalMoveY(originalLocalPosition.y + hoverLiftAmount, AnimationDuration);
-        // ... (Hint logic)
-    }
-
-    private void OnHoverExit(PointerEvent args)
-    {
-        if (oculusGrabbable.MaxGrabPoints == 0 || IsHeld) return;
-        transform.DOLocalMoveY(originalLocalPosition.y, AnimationDuration);
-        // ... (Hint logic)
-    }
-
-    internal void SetDiscardIndicator(GamePlay.Client.View.DiscardArea handDiscardBorder)
-    {
-        //throw new NotImplementedException();
-        Debug.Log($"Should do something");
-
-    }
 }

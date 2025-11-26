@@ -3,6 +3,8 @@ using Common.Interfaces;
 using GamePlay.Client.Model;
 using Mahjong.Model;
 using UnityEngine;
+using GamePlay.Client.Controller;
+
 
 namespace GamePlay.Client.View
 {

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Mahjong.Logic;
 using Mahjong.Model;
+using GamePlay.Client.Controller;
+
 using UnityEngine;
 
 
