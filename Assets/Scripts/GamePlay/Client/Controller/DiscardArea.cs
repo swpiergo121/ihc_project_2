@@ -1,44 +1,57 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace GamePlay.Client.Controller
 {
     public class DiscardArea : MonoBehaviour
     {
-        // Drag the PARENT (The Bright Wall) into this slot in the Inspector
+        [Tooltip("Drag the visual mesh (the glowing box) here.")]
         public GameObject VisualBorder;
 
-        private int activeHoldCount = 0;
+        // We use a HashSet so a tile cannot be counted twice by accident
+        private HashSet<VRHandTile> activeHolders = new HashSet<VRHandTile>();
 
         private void Awake()
         {
-            // This turns off the PARENT when the game starts
             if (VisualBorder != null) VisualBorder.SetActive(false);
         }
 
-        public void RegisterHold()
+        public void RegisterHold(VRHandTile tile)
         {
-            activeHoldCount++;
-            UpdateVisuals();
+            if (tile == null) return;
+
+            // Add returns true if it wasn't already in the set
+            if (activeHolders.Add(tile))
+            {
+                UpdateVisuals();
+            }
         }
 
-        public void UnregisterHold()
+        public void UnregisterHold(VRHandTile tile)
         {
-            activeHoldCount--;
-            if (activeHoldCount < 0) activeHoldCount = 0;
-            UpdateVisuals();
+            if (tile == null) return;
+
+            // Remove returns true if it was actually in the set
+            if (activeHolders.Remove(tile))
+            {
+                UpdateVisuals();
+            }
         }
 
         private void UpdateVisuals()
         {
             if (VisualBorder == null) return;
 
+            // Only show border if at least 1 valid tile is registered
             bool shouldShow = activeHoldCount > 0;
-            Debug.Log($"[DiscardArea] Register hold number {shouldShow}");
-            // This toggles the PARENT
+
             if (VisualBorder.activeSelf != shouldShow)
             {
-                VisualBorder.SetActive(true);
+                VisualBorder.SetActive(shouldShow);
             }
         }
+
+        // Helper property to check count
+        private int activeHoldCount => activeHolders.Count;
     }
 }

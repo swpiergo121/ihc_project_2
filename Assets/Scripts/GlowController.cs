@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  * All rights reserved.
  *
@@ -35,11 +35,11 @@ namespace Oculus.Interaction
     /// </remarks>
     public class Grabbable : PointableElement, IGrabbable, ITimeConsumer
     {
-        [Tooltip("Arrastra aquí el objeto hijo que contiene el material de brillo.")]
+        [Tooltip("Arrastra aquÃ­ el objeto hijo que contiene el material de brillo.")]
         [SerializeField]
         private GameObject _glowObject;
 
-        [Tooltip("Arrastra aquí el objeto que contiene la pila de descarte.")]
+        [Tooltip("Arrastra aquÃ­ el objeto que contiene la pila de descarte.")]
         [SerializeField]
         private GameObject _discardPile;
 
@@ -150,7 +150,6 @@ namespace Oculus.Interaction
         private Material outlineMaterial;   // guardaremos el material ORIGINAL
 
         protected override void Awake()
-
         {
             base.Awake();
 
@@ -163,7 +162,7 @@ namespace Oculus.Interaction
                 outlineMaterial = original[1];   // guardamos el shader del outline
             }
 
-            // --- AHORA sí modificamos los materials (instanced) ---
+            // --- AHORA sÃ­ modificamos los materials (instanced) ---
             mats = rend.materials;
             if (mats.Length > 1)
             {
@@ -259,38 +258,17 @@ namespace Oculus.Interaction
         }
 
 
-        //private void EnableOutline()
-        //{
-        //    if (outlineMaterial == null) return;
-
-        //    var mats = rend.materials;
-        //    if (mats.Length > 1)
-        //    {
-        //        mats[1] = outlineMaterial;
-        //        rend.materials = mats;
-        //    }
-        //}
-        void EnableOutline()
+        private void EnableOutline()
         {
-            var m = rend.materials;
+            if (outlineMaterial == null) return;
 
-            Debug.Log(">>> BEFORE Assign:");
-            for (int i = 0; i < m.Length; i++)
-                Debug.Log($"{gameObject.name} mat[{i}] = {m[i]?.name}");
-
-            if (m.Length > 1)
-                m[1] = outlineMaterial;
-            else
-                Debug.LogError("NO MATERIAL SLOT 1!!");
-
-            rend.materials = m;
-
-            Debug.Log(">>> AFTER Assign:");
-            m = rend.materials;
-            for (int i = 0; i < m.Length; i++)
-                Debug.Log($"{gameObject.name} mat[{i}] = {m[i]?.name}");
+            var mats = rend.materials;
+            if (mats.Length > 1)
+            {
+                mats[1] = outlineMaterial;
+                rend.materials = mats;
+            }
         }
-
 
         private void DisableOutline()
         {
@@ -369,7 +347,7 @@ namespace Oculus.Interaction
                     break;
             }
         }
-        
+
 
 
 
@@ -502,7 +480,7 @@ namespace Oculus.Interaction
             _activeTransformer.BeginTransform();
         }
 
-     
+
         private void UpdateTransform()
         {
             if (_activeTransformer == null)

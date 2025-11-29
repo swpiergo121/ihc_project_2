@@ -27,7 +27,9 @@ namespace GamePlay.Client.View
         [Header("VR Setup")]
         public DiscardArea HandDiscardBorder;
 
-        // In PlayerHandManager.cs
+        // Add this variable to the class to remember the previous frame's data
+        private Tile? _cachedLastDraw = null;
+
         public void AssignDiscardBorder(DiscardArea border)
         {
             HandDiscardBorder = border;
@@ -122,14 +124,49 @@ namespace GamePlay.Client.View
 
         public void DiscardTile(bool discardingLastDraw)
         {
-            discarding = true;
-            if (discardingLastDraw) lastDrawTransform.gameObject.SetActive(false);
-            else
+            // 1. If there is no data, hide the object and reset cache
+            if (LastDraw == null)
             {
-                int tileIndex = Random.Range(0, Count);
-                handTileTransforms[tileIndex].gameObject.SetActive(false);
+                if (lastDrawTransform.gameObject.activeSelf)
+                    lastDrawTransform.gameObject.SetActive(false);
+
+                _cachedLastDraw = null;
+                return;
             }
-            StartCoroutine(StopDiscarding());
+
+            // 2. Check: Is this a BRAND NEW tile we just drew?
+            // We compare the current data (LastDraw) with the history (_cachedLastDraw).
+            // (Tile? comparison works automatically in C#).
+            bool isNewDraw = !object.Equals(LastDraw, _cachedLastDraw);
+
+            // Update the cache for next frame
+            _cachedLastDraw = LastDraw;
+
+            // 3. If it IS a new draw, we MUST force it to appear.
+            if (isNewDraw)
+            {
+                lastDrawTransform.gameObject.SetActive(true);
+                // Also update the visuals immediately
+                lastDrawInstance.SetTile((Tile)LastDraw);
+                if (lastDrawVR != null) lastDrawVR.SetTile((Tile)LastDraw);
+            }
+
+            // 4. THE FIX: 
+            // If it is NOT a new draw, check if the object is hidden.
+            // If it is hidden, it means the player physically threw it.
+            // DO NOT turn it back on.
+            if (!lastDrawTransform.gameObject.activeSelf)
+            {
+                return;
+            }
+
+            // 5. Standard Visual Update (Only runs if the tile is visibly active)
+            lastDrawInstance.SetTile((Tile)LastDraw);
+            if (lastDrawVR != null) lastDrawVR.SetTile((Tile)LastDraw);
+
+            var p = drawnHolder.transform.localPosition;
+            drawnHolder.transform.localPosition = new Vector3(
+                Count * MahjongConstants.HandTileWidth + MahjongConstants.LastDrawGap, p.y, p.z);
         }
 
         private IEnumerator StopDiscarding()
