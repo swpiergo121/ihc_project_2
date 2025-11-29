@@ -150,6 +150,7 @@ namespace Oculus.Interaction
         private Material outlineMaterial;   // guardaremos el material ORIGINAL
 
         protected override void Awake()
+
         {
             base.Awake();
 
@@ -258,17 +259,38 @@ namespace Oculus.Interaction
         }
 
 
-        private void EnableOutline()
-        {
-            if (outlineMaterial == null) return;
+        //private void EnableOutline()
+        //{
+        //    if (outlineMaterial == null) return;
 
-            var mats = rend.materials;
-            if (mats.Length > 1)
-            {
-                mats[1] = outlineMaterial;
-                rend.materials = mats;
-            }
+        //    var mats = rend.materials;
+        //    if (mats.Length > 1)
+        //    {
+        //        mats[1] = outlineMaterial;
+        //        rend.materials = mats;
+        //    }
+        //}
+        void EnableOutline()
+        {
+            var m = rend.materials;
+
+            Debug.Log(">>> BEFORE Assign:");
+            for (int i = 0; i < m.Length; i++)
+                Debug.Log($"{gameObject.name} mat[{i}] = {m[i]?.name}");
+
+            if (m.Length > 1)
+                m[1] = outlineMaterial;
+            else
+                Debug.LogError("NO MATERIAL SLOT 1!!");
+
+            rend.materials = m;
+
+            Debug.Log(">>> AFTER Assign:");
+            m = rend.materials;
+            for (int i = 0; i < m.Length; i++)
+                Debug.Log($"{gameObject.name} mat[{i}] = {m[i]?.name}");
         }
+
 
         private void DisableOutline()
         {
