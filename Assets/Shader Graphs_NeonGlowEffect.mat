@@ -37,13 +37,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _GlowStrenght: 3
-    - _PulseSpeed: 1.3
+    - _GlowStrenght: 4
+    - _PulseSpeed: 7
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _EmissionColor: {r: 0.96938777, g: 1, b: 0, a: 0.8862745}
-    - _NeonColor: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissionColor: {r: 0.6921833, g: 1, b: 0.4575472, a: 0.8862745}
+    - _NeonColor: {r: 0.7467217, g: 1, b: 0.0141509175, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &1976066563304472410
 MonoBehaviour:
