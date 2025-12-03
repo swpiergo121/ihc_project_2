@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿/*
+using System.Collections;
 using System.Collections.Generic;
 using Mahjong.Model;
 using Managers;
@@ -81,6 +82,111 @@ namespace PUNLobby
         {
             var players = (GamePlayers)value;
             ResetSettings();
+        }
+    }
+}
+*/
+
+using System.Collections;
+using System.Collections.Generic;
+using Mahjong.Model;
+using Managers;
+using Photon.Pun;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace PUNLobby
+{
+    public class CreateRoomPanel : MonoBehaviour
+    {
+        [Header("UI References")]
+        public InputField roomNameInputField;
+
+        [Header("Navegación")]
+        public GameObject panelSiguiente; // <--- ARRASTRA AQUÍ TU PANEL DE LOBBY/SALA
+
+        [Header("Nuevos Selectores")]
+        public ControllerPlayer  selectorLargo;  // row_length
+        public ControllerPlayer  selectorTiempo; // row_time
+
+        // Variables internas
+        private GameSetting gameSettings;
+        private string roomName;
+
+        private void OnEnable()
+        {
+            roomName = $"{PhotonNetwork.NickName}'s Room";
+            if (roomNameInputField != null) roomNameInputField.text = roomName;
+            gameSettings = new GameSetting();
+        }
+
+        // ESTA ES LA FUNCIÓN QUE DEBE LLAMAR TU BOTÓN NARANJA
+        public void CreateRoom()
+        {
+            // 1. Resetear configuración
+            gameSettings = new GameSetting();
+            gameSettings.GamePlayers = GamePlayers.Four; // Fijo a 4 jugadores
+
+            // 2. Leer botones visuales
+            ConfigurarJuegoDesdeUI();
+
+            Debug.Log($"Creando sala... Rondas: {gameSettings.RoundCount}, Tiempo Base: {gameSettings.BaseTurnTime}");
+
+            // 3. Lógica de Photon (Crear la sala online)
+            Launcher.Instance.CreateRoom(roomName, gameSettings);
+
+            // 4. CAMBIO DE PANTALLA VISUAL
+            if (panelSiguiente != null)
+            {
+                panelSiguiente.SetActive(true); // Abre el lobby
+                this.gameObject.SetActive(false); // Cierra este panel
+            }
+            else
+            {
+                Debug.LogWarning("¡Ojo! No has asignado el 'Panel Siguiente' en el inspector.");
+            }
+        }
+
+        private void ConfigurarJuegoDesdeUI()
+        {
+            // --- DURACIÓN ---
+            if (selectorLargo != null)
+            {
+                string seleccion = selectorLargo.opcionElegida;
+                switch (seleccion)
+                {
+                    case "GLength": gameSettings.RoundCount = RoundCount.E; break;
+                    case "GLengthSecond": gameSettings.RoundCount = RoundCount.ES; break;
+                    case "GLengthThird": gameSettings.RoundCount = RoundCount.FULL; break;
+                    default: gameSettings.RoundCount = RoundCount.E; break;
+                }
+            }
+
+            // --- TIEMPOS ---
+            if (selectorTiempo != null)
+            {
+                string seleccion = selectorTiempo.opcionElegida;
+                switch (seleccion)
+                {
+                    case "TTFirst": // 5+20s
+                        gameSettings.BaseTurnTime = 5;
+                        gameSettings.BonusTurnTime = 20;
+                        break;
+                    case "TTSecond": // 20+60s
+                        gameSettings.BaseTurnTime = 20;
+                        gameSettings.BonusTurnTime = 60;
+                        break;
+                    case "TTThird": // 280+20s
+                        gameSettings.BaseTurnTime = 280;
+                        gameSettings.BonusTurnTime = 20;
+                        break;
+                }
+            }
+        }
+
+        public void BackToLobby()
+        {
+            gameObject.SetActive(false);
         }
     }
 }
