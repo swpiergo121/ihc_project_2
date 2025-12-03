@@ -149,10 +149,12 @@ public class VRHandTile : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        if (IsHeld && !isLocked && discardIndicator != null && other.gameObject == discardIndicator.gameObject)
+        if (!isLocked && discardIndicator != null && other.gameObject == discardIndicator.gameObject)
         {
+            if (!gameObject.activeSelf) return;
+
             Debug.Log($"[VRHandTile] Discarding {Tile}");
             Tile tileToDiscard = Tile;
             bool wasLastDraw = IsLastDraw;
@@ -164,6 +166,14 @@ public class VRHandTile : MonoBehaviour
     private void ForceDrop()
     {
         if (oculusGrabbable != null) oculusGrabbable.enabled = false;
+
+        if (IsHeld)
+        {
+            IsHeld = false;
+            // Unregister visual border logic if you are using it
+            if (discardIndicator != null) discardIndicator.UnregisterHold(this);
+        }
+
         gameObject.SetActive(false);
     }
 
