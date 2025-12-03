@@ -26,6 +26,16 @@ namespace GamePlay.Server.Controller.GameState
             firstTime = Time.time;
             CurrentRoundStatus.ShufflePlayers();
             AssignInitialPoints();
+
+            // --- NEW LOGIC: Mark bots as "ready" immediately ---
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (CurrentRoundStatus.IsBot(i))
+                {
+                    responds[i] = true; // Bots are always ready, no event needed
+                }
+            }
+            // --- END
             ClientRpcCalls();
         }
 
@@ -42,6 +52,15 @@ namespace GamePlay.Server.Controller.GameState
             var room = PhotonNetwork.CurrentRoom;
             for (int i = 0; i < CurrentRoundStatus.TotalPlayers; i++)
             {
+                // --- NEW LOGIC: Check for bots before sending RPC ---
+                if (CurrentRoundStatus.IsBot(i))
+                {
+                    Debug.Log($"[Server] Skipping RpcGamePrepare for Bot {i}");
+                    continue; // Do not send RPCs to bots
+                }
+                // --- END NEW LOGIC ---
+
+                // This code is now safe and will only run for humans
                 var player = CurrentRoundStatus.GetPlayer(i);
                 ClientBehaviour.Instance.photonView.RPC("RpcGamePrepare", player, new EventMessages.GamePrepareInfo
                 {

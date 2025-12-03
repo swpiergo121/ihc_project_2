@@ -71,6 +71,7 @@ namespace PUNLobby
         {
             if (!PhotonNetwork.IsConnected)
             {
+                PhotonNetwork.NetworkingClient.LoadBalancingPeer.MaximumTransferUnit = 1200;
                 PhotonNetwork.ConnectUsingSettings();
                 PanelManager.ChangeTo(PanelManager.LobbyPanel);
             }
