@@ -45,8 +45,7 @@ namespace GamePlay.Client.Controller.GameState
 
         public override void OnClientStateExit()
         {
-            controller.HandPanelManager.Show();
-            controller.HandPanelManager.UnlockTiles();
+            
         }
 
         public override void OnStateUpdate()
