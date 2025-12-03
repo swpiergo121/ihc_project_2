@@ -3,6 +3,8 @@ using Common.Interfaces;
 using GamePlay.Client.Model;
 using Mahjong.Model;
 using UnityEngine;
+using GamePlay.Client.Controller;
+
 
 namespace GamePlay.Client.View
 {
@@ -13,6 +15,29 @@ namespace GamePlay.Client.View
         public PlayerRiverManager[] RiverManagers;
         public PlayerBeiDoraManager[] BeiManagers;
 
+        // 1. ADD THIS ARRAY
+        [Header("VR Setup")]
+        public DiscardArea[] DiscardBorders;
+
+        private void Start()
+        {
+            // Safety check to make sure you dragged them in
+            if (DiscardBorders == null || DiscardBorders.Length == 0)
+            {
+                Debug.LogError("Discard Borders not assigned in TableTilesManager!");
+                return;
+            }
+
+            // Loop through all 4 players and assign their specific borders
+            for (int i = 0; i < HandManagers.Length; i++)
+            {
+                if (i < DiscardBorders.Length && HandManagers[i] != null)
+                {
+                    // We call the method we created in the previous step on PlayerHandManager
+                    HandManagers[i].AssignDiscardBorder(DiscardBorders[i]);
+                }
+            }
+        }
         private void UpdateHands(ClientRoundStatus status)
         {
             for (int placeIndex = 0; placeIndex < HandManagers.Length; placeIndex++)
@@ -126,5 +151,7 @@ namespace GamePlay.Client.View
             UpdateRivers(subject);
             UpdateBeiDoras(subject);
         }
+
+
     }
 }

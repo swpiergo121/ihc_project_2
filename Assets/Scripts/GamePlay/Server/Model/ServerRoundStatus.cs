@@ -34,15 +34,56 @@ namespace GamePlay.Server.Model
         private bool[] discardZhenting;
         private bool[] richiZhenting;
         private int[] beiDoras;
-        private IList<int> playerActorNumbers;
-        private IDictionary<int, string> playerNames;
 
-        public ServerRoundStatus(GameSetting gameSettings, IList<Player> players)
+        private string[] playerNicknames; // The full list of names, e.g., ["Human1", "Bot 1", "Human2", "Bot 2"]
+        private int[] playerActorNumbers; // Stores ActorNumber for humans, and -1 for bots
+        private bool[] isBotPlayer;       // A simple lookup, e.g., [false, true, false, true]
+
+        public ServerRoundStatus(GameSetting gameSettings, IList<Player> humanPlayers, string[] seatOrder)
         {
             GameSettings = gameSettings;
-            points = new int[TotalPlayers];
-            playerActorNumbers = players.Select(p => p.ActorNumber).ToList();
-            playerNames = players.ToDictionary(p => p.ActorNumber, p => p.NickName);
+            int totalPlayers = seatOrder.Length; // This should be 4
+
+            // --- ADD THESE DEBUG LOGS ---
+            Debug.LogWarning("--- [DEBUG] ServerRoundStatus Constructor START ---");
+            Debug.Log($"[DEBUG] Received {totalPlayers} players");
+            Debug.Log($"[DEBUG] Received {humanPlayers.Count} human players: {string.Join(", ", humanPlayers.Select(p => p.NickName))}");
+            Debug.Log($"[DEBUG] Received {seatOrder.Length} seat order: {string.Join(", ", seatOrder)}");
+            // --- END DEBUG LOGS ---
+
+            // Initialize all our new arrays
+            points = new int[totalPlayers];
+            playerNicknames = new string[totalPlayers];
+            playerActorNumbers = new int[totalPlayers];
+            isBotPlayer = new bool[totalPlayers];
+
+            // Loop through the seat order and populate our lists
+            for (int i = 0; i < totalPlayers; i++)
+            {
+                string name = seatOrder[i];
+                playerNicknames[i] = name;
+
+                // Try to find this name in the human player list
+                var human = humanPlayers.FirstOrDefault(p => p.NickName == name);
+
+                if (human != null)
+                {
+                    // This is a HUMAN player
+                    Debug.Log($"[DEBUG] Seat {i} ({name}): Found HUMAN. ActorNumber: {human.ActorNumber}");
+                    isBotPlayer[i] = false;
+                    playerActorNumbers[i] = human.ActorNumber;
+                }
+                else
+                {
+                    // This is a BOT
+                    Debug.LogWarning($"[DEBUG] Seat {i} ({name}): NOT FOUND. Marking as BOT. ActorNumber: -1");
+                    isBotPlayer[i] = true;
+                    playerActorNumbers[i] = -1; // Use -1 as a flag for bots
+                }
+            }
+    
+            
+
         }
 
         public GameSetting GameSettings { get; }
@@ -60,11 +101,30 @@ namespace GamePlay.Server.Model
         }
         public Player GetPlayer(int playerIndex)
         {
+            // First, check if this index is a bot. If so, return null.
+            if (isBotPlayer[playerIndex])
+            {
+                Debug.Log($"[DEBUG] GetPlayer: playerIndex {playerIndex} is a BOT. Returning null.");
+                return null;
+            }
+            Debug.LogWarning($"[DEBUG] GetPlayer: playerIndex {playerIndex} is HUMAN. Trying to find ActorNumber {playerActorNumbers[playerIndex]}.");
+
             var room = PhotonNetwork.CurrentRoom;
             if (room == null) throw new ArgumentException("This should not happen");
             int actorNumber = playerActorNumbers[playerIndex];
             return room.Players[actorNumber];
         }
+
+        // --- NEW HELPER METHOD ---
+        /// <summary>
+        /// Checks if the player at the given seat index is a bot.
+        /// </summary>
+        public bool IsBot(int playerIndex)
+        {
+            CheckRange(playerIndex);
+            return isBotPlayer[playerIndex];
+        }
+
         public IList<int> PlayerActorNumbers => playerActorNumbers;
         public int OyaPlayerIndex => oya;
         public int Field => field;
@@ -108,13 +168,14 @@ namespace GamePlay.Server.Model
         }
         public bool FirstTurn => firstTurn;
         public int TotalPlayers => GameSettings.MaxPlayer;
-        public string[] PlayerNames => playerActorNumbers.Select(id => playerNames[id]).ToArray();
+        public string[] PlayerNames => playerNicknames;
         public int KongClaimed => kongClaimed;
         public int MaxBonusTurnTime => bonusTurnTime.Max();
 
         public string GetPlayerName(int index)
         {
-            return playerNames[playerActorNumbers[index]];
+            CheckRange(index);
+            return playerNicknames[index];
         }
 
         public void ClaimKong()
@@ -124,7 +185,32 @@ namespace GamePlay.Server.Model
 
         public void ShufflePlayers()
         {
-            playerActorNumbers.Shuffle();
+            // 1. Create a list of indices [0, 1, 2, 3]
+            var indices = new List<int>();
+            for (int i = 0; i < TotalPlayers; i++)
+            {
+                indices.Add(i);
+            }
+
+            // 2. Shuffle the indices (using your existing Shuffle extension)
+            indices.Shuffle();
+
+            // 3. Create temporary copies of your arrays
+            var tempActorNumbers = (int[])playerActorNumbers.Clone();
+            var tempIsBot = (bool[])isBotPlayer.Clone();
+            var tempNames = (string[])playerNicknames.Clone();
+
+            // 4. Reassign all arrays based on the shuffled indices
+            for (int i = 0; i < TotalPlayers; i++)
+            {
+                int originalIndex = indices[i];
+
+                playerActorNumbers[i] = tempActorNumbers[originalIndex];
+                isBotPlayer[i] = tempIsBot[originalIndex];
+                playerNicknames[i] = tempNames[originalIndex];
+            }
+
+            Debug.LogWarning($"[Server] Players Shuffled. New order: {string.Join(", ", playerNicknames)}");
         }
 
         public int GetBonusTurnTime(int index)
@@ -368,6 +454,17 @@ namespace GamePlay.Server.Model
             if (!GameSettings.Allow4WindDraw) return false;
             if (!FirstTurn) return false;
             if (TotalPlayers < 4) return false;
+
+            // --- ADD THIS FIX (line 421) ---
+            // Check if any player's river is empty. If so, it's not a four-wind draw.
+            Debug.Log("[DEBUG] CheckFourWinds: Checking for empty rivers...");
+            if (rivers.Any(river => river.Count == 0))
+            {
+                Debug.Log("[DEBUG] CheckFourWinds: Found an empty river. Skipping check. (SUCCESS)");
+                return false;
+            }
+            // --- END OF FIX ---
+
             var first = rivers[0][0].Tile;
             for (int i = 1; i < TotalPlayers; i++)
             {

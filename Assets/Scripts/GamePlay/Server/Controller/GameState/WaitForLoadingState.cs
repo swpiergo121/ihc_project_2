@@ -35,17 +35,23 @@ namespace GamePlay.Server.Controller.GameState
             PhotonNetwork.RemoveCallbackTarget(this);
         }
 
+        // --- MODIFIED METHOD ---
         public override void OnStateUpdate()
         {
-            if (responds.Count == TotalPlayers - 1)
+            // The Master Client is PlayerCount = 1.
+            // We are waiting for all *other* human clients.
+            int expectedHumanClients = PhotonNetwork.CurrentRoom.PlayerCount - 1;
+
+            if (responds.Count == expectedHumanClients)
             {
-                Debug.Log("All set, game start");
+                Debug.Log($"All {responds.Count} human clients are ready, game start");
                 ServerBehaviour.Instance.GamePrepare();
                 return;
             }
+
             if (Time.time - firstTime > serverTimeOut)
             {
-                Debug.Log("Time out");
+                Debug.Log($"Time out: Expected {expectedHumanClients} responses but only got {responds.Count}");
                 ServerBehaviour.Instance.GameAbort();
                 return;
             }
